@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NeX comparsion</title>
+    <link rel="stylesheet" href="../assets/scripts/bulma.min.css">
+    <link rel="stylesheet" href="../assets/scripts/compare_app.css">
+    <script>
+      var app = {
+        "name": "Spaces",
+        "owner": "DeepView's",
+        "zoombox": {
+          "desktop": {"size": '100px', "scale": "1.0"},
+          "tablet": {"size": '80px', "scale": "0.8"},
+          "phone": {"size": '150px', "scale": "1.5"}
+        },
+        "methods": ['Ground Truth','Ours','DeepView',"Soft3D"],
+        "scenes": [
+          {
+            "name": "scene_000",
+            "path": "images/scene_000/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 486,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 250, 
+              "left": 100 
+              }
+          },
+          {
+            "name": "scene_009",
+            "path": "images/scene_009/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 481,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 270, 
+              "left": 180 
+              }
+          },
+          {
+            "name": "scene_010",
+            "path": "images/scene_010/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 486,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 202, 
+              "left": 413 
+              }
+          },
+          {
+            "name": "scene_023",
+            "path": "images/scene_023/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 482,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 205, 
+              "left": 220 
+              }
+          },
+          {
+            "name": "scene_024",
+            "path": "images/scene_024/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 488,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 280, 
+              "left":  490
+              }
+          },
+          {
+            "name": "scene_052",
+            "path": "images/scene_052/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 488,
+            "zoom": {
+              "ratio": 1.0,
+              "top": 400, 
+              "left":  650
+              }
+          },
+          {
+            "name": "scene_056",
+            "path": "images/scene_056/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 484,
+            "zoom": {
+              "ratio": 1.0,
+              "top": 300, 
+              "left":  348
+              }
+          },
+          {
+            "name": "scene_062",
+            "path": "images/scene_062/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 484,
+            "zoom": {
+              "ratio": 1.5,
+              "top": 27, 
+              "left":  556
+              }
+          },
+          {
+            "name": "scene_063",
+            "path": "images/scene_063/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 482,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 230, 
+              "left":  390
+              }
+          },
+          {
+            "name": "scene_073",
+            "path": "images/scene_073/",
+            "images": ['cam07_gt.jpg','cam07_ours.jpg','cam07_deepview.jpg','cam07_soft3d.jpg'],
+            "width": 800,
+            "height": 482,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 80, 
+              "left":  250
+              }
+          },
+        ]
+      }
+      window.app = app;
+    </script>
+    <script src="../assets/scripts/compare_template.js"></script>
+    <script src="../assets/scripts/compare_app.js"></script>
+  </head>
+  <body>
+  </body>
+</html>

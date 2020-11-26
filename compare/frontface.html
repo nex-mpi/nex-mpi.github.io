@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NeX comparsion</title>
+    <link rel="stylesheet" href="../assets/scripts/bulma.min.css">
+    <link rel="stylesheet" href="../assets/scripts/compare_app.css">
+    <script>
+      var app = {
+        "name": "real forward-facing",
+        "owner": "NeRF's",
+        "zoombox": {
+          "desktop": {"size": '80px', "scale": "0.8"},
+          "tablet": {"size": '60px', "scale": "0.6"},
+          "phone": {"size": '150px', "scale": "1.5"}
+        },
+        "methods": ['Ground Truth','Ours','NeRF',"LLFF",'SRN'],
+        "scenes": [
+          {
+            "name": "fern",
+            "path": "images/fern/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 420, 
+              "left": 635 
+              }
+          },
+          {
+            "name": "flower",
+            "path": "images/flower/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.0,
+              "top": 300, 
+              "left": 400 
+            }
+          },
+          {
+            "name": "fortress",
+            "path": "images/fortress/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.0,
+              "top": 220, 
+              "left": 390 
+            }
+          },
+          {
+            "name": "horns",
+            "path": "images/horns/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 573, 
+              "left": 146 
+            }
+          },
+          {
+            "name": "leaves",
+            "path": "images/leaves/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.5,
+              "top": 390, 
+              "left": 410 
+            }
+          },
+          {
+            "name": "orchids",
+            "path": "images/orchids/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.2,
+              "top": 250, 
+              "left": 290 
+            }
+          },
+          {
+            "name": "room",
+            "path": "images/room/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 16, 
+              "left": 505 
+            }
+          },
+          ,
+          {
+            "name": "trex",
+            "path": "images/trex/",
+            "images": ['016_gt.jpg','016_ours.jpg','016_nerf.jpg','016_llff.jpg','016_srn_up2.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 110, 
+              "left": 358 
+            }
+          }
+        ]
+      }
+      window.app = app;
+    </script>
+    <script src="../assets/scripts/compare_template.js"></script>
+    <script src="../assets/scripts/compare_app.js"></script>
+  </head>
+  <body>
+  </body>
+</html>

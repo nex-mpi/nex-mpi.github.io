@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NeX comparsion</title>
+    <link rel="stylesheet" href="../assets/scripts/bulma.min.css">
+    <link rel="stylesheet" href="../assets/scripts/compare_app.css">
+    <script>
+      var app = {
+        "name": "Shiny",
+        "owner": "our",
+        "zoombox": {
+          "desktop": {"size": '150px', "scale": "1.5"},
+          "tablet": {"size": '100px', "scale": "1.0"},
+          "phone": {"size": '150px', "scale": "1.5"}
+        },
+        "methods": ['Ground Truth','Ours','NeRF'],
+        "scenes": [
+          {
+            "name": "CD",
+            "path": "images/optical_bottle/",
+            "images": ['112_gt.jpg','112_ours.jpg','112_nerf.jpg'],
+            "width": 1008,
+            "height": 576,
+            "zoom": {
+              "ratio": 1.4,
+              "top": 260, 
+              "left": 220
+              }
+          },
+          {
+            "name": "Food",
+            "path": "images/saneh_jaan2/",
+            "images": ['024_gt.jpg','024_ours.jpg','024_nerf.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.0,
+              "top": 320, 
+              "left": 125
+              }
+          },
+          {
+            "name": "Tools",
+            "path": "images/wrench/",
+            "images": ['000_gt.jpg','000_ours.jpg','000_nerf.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.0,
+              "top": 463, 
+              "left": 326
+              }
+          },
+          {
+            "name": "Crest",
+            "path": "images/wat_phrakaew2-2/",
+            "images": ['024_gt.jpg','024_ours.jpg','024_nerf.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.2,
+              "top": 400, 
+              "left": 485
+              }
+          },
+          {
+            "name": "Seasoning",
+            "path": "images/seasoning/",
+            "images": ['008_gt.jpg','008_ours.jpg','008_nerf.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 2.0,
+              "top": 460, 
+              "left": 650
+              }
+          },
+          {
+            "name": "Giant",
+            "path": "images/giant/",
+            "images": ['000_gt.jpg','000_ours.jpg','000_nerf.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 1.2,
+              "top": 378, 
+              "left": 504
+              }
+          },
+          {
+            "name": "Pasta",
+            "path": "images/spaghetti/",
+            "images": ['000_gt.jpg','000_ours.jpg','000_nerf.jpg'],
+            "width": 1008,
+            "height": 756,
+            "zoom": {
+              "ratio": 0.7,
+              "top": 403, 
+              "left": 767
+              }
+          },
+          {
+            "name": "Pasta",
+            "path": "images/labjuice/",
+            "images": ['056_gt.jpg','056_ours.jpg','056_nerf.jpg'],
+            "width": 1008,
+            "height": 576,
+            "zoom": {
+              "ratio": 0.8,
+              "top": 180, 
+              "left": 600
+              }
+          }
+        ]
+      }
+      window.app = app;
+    </script>
+	<script src="../assets/scripts/compare_template.js"></script>
+    <script src="../assets/scripts/compare_app.js"></script>
+  </head>
+  <body>
+  </body>
+</html>
