@@ -1,0 +1,178 @@
+canvas {
+	/*border: 2px solid black;*/
+	border: 0px;
+	background-color: black;
+  margin: auto;
+  display: block;
+  /*position: absolute;*/
+  /*top: 0;*/
+  /*bottom: 0;*/
+  /*left: 0;*/
+  /*right: 0;*/
+}
+video {
+	display: none;
+}
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background-color: black;
+  color: #BBBBBB;
+  font-family: arial;
+}
+
+#fps {
+  color: #72b584;
+  display: block;
+}
+
+#folderlist {
+  color: white;
+  position: absolute;
+  z-index: 10;
+}
+#canvas-clip, #webgl-canvas {
+  box-sizing: border-box;
+  height: 100%;
+  left: 0;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+#canvas-clip.presenting {
+  /* This property allows the canvas-clip div to hide the parts of the
+  WebVR canvas that extend past it's bounds without adding scrollbars*/
+  overflow: hidden;
+
+  /* These center the div on the screen */
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+
+.presenting #webgl-canvas {
+  /* By making the canvas 200% as wide as it's parent we'll only see the
+  left eye's content. The rest will be cropped by the parent div */
+  width: 200%;
+}
+
+#workspace {
+  position: relative;
+}
+
+#cursor {
+  width: 3px;
+  height: 3px;
+  display: block;
+  position: absolute;
+  background-color: white;
+}
+
+#rotation_plane, #rendered_planes, #show_plane, #spin_radius, #spin_speed {
+  width: 500px;
+  display: inline-block;
+  margin-left: 30px;
+}
+#amount, #center, #plane, #speed, #radius {
+  width: 80px;
+  display: inline-block;
+  text-align: center;
+}
+.desc {
+  width: 150px;
+  display: inline-block;
+}
+.ss {
+  margin: 5px;
+  margin-left: 15px;
+}
+
+.info {
+  margin: auto;
+  width: 800px;
+  margin-top: 10px;
+}
+
+#motion-selector {
+  margin-left: 15px;
+}
+
+.ui-slider-handle {
+  background-color: #555555 !important;
+  border: 1px solid #555555 !important;
+  width: 25px !important;
+  height: 18px !important;
+}
+
+.sliding_active .ui-slider-handle {
+  background-color: #e18a09 !important;
+  border: 1px solid #e18a09 !important;
+  width: 25px !important;
+  height: 18px !important;
+}
+
+.ui-slider-disabled {
+  background-color: #454545 !important;
+}
+
+.ui-slider {
+  height: 10px;
+  background-color: #212121;
+  border: 1px solid black !important;
+}
+.sliding_active .ui-slider {
+  height: 10px;
+  background-color: #673e00;
+  border: 1px solid black !important;
+}
+
+.ui-slider-range {
+  background-color: #414141;
+  border: 1px solid black !important;
+}
+
+.sliding_active .ui-slider-range {
+  background-color: #985b00;
+  border: 1px solid #985b00 !important;
+}
+.sliding_active {
+  color: #c19100;
+}
+.sliding_disabled {
+  color: #3c3c3c;
+}
+
+.info {
+  margin: auto;
+  width: 800px;
+  margin-top: 10px;
+}
+
+.rradio input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0px;
+}
+
+.rradio input + label {
+  margin: 0px;
+  background-color: #3e3e3e;
+  padding: 2px 15px;
+  cursor: pointer;
+  border-radius: 2px;
+  color: #828282;
+}
+.rradio input:checked + label {
+  background-color: #797979;
+  color: black;
+}
+.section {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: block;
+  font-weight: bold;
+}

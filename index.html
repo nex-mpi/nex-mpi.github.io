@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="assets/scripts/bulma.min.css">
     <style>
       .black-frame{
-        height: calc(100% - 0.3rem);
+        height: 100%;
         background: #171617;
         width: 100%;
         display : flex;
@@ -16,6 +16,9 @@
       }
       .card .media-content .title, .card .media-content .subtitle{
         color: #4a4a4a;
+      }
+      .card-footer{
+        text-align: center;
       }
     </style>
   </head>
@@ -44,32 +47,15 @@
             </div>
           </div>
           <div>
-            Vidyasirimedhi Institute of Science and Technology
+            VISTEC - Vidyasirimedhi Institute of Science and Technology
           </div>
         </div>
       </div>
     </section>
-    <section class="section" style="background-color:#171617">
-      <div class="container">
-        <video style="max-width: 100%;" controls>
-          <source src="assets/video/supplementary-8458.mp4" type="video/mp4" />
-        </video>
-      </div>
-    </section>
-    <section class="hero is-light">
-      <div class="hero-body">
-        <div class="container" style="text-align: center;">
-          <div class="columns">
-            <div class="column">
-              Paper [Soon]
-            </div>
-            <div class="column">
-              Code [Soon]
-            </div>
-            <div class="column">
-              Data [Soon]
-            </div>
-          </div>
+    <section class="section" style="background-color:#171617;display : flex;align-items : center;justify-content: center;padding: 0px;">
+      <div style="max-width: 1920px;width: 1920px;">
+        <div style="position: relative;width: 100%;height: 0;padding-bottom: 56.25%;">
+          <iframe height="1080" width="1920" style=" position: absolute;top: 0;left: 0;width: 100%;height: 100%;max-height: 100%; max-width: 100%;" src="https://www.youtube.com/embed/d2UsFs4D-nw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </section>
@@ -79,7 +65,7 @@
           <h1 class="title">Abstract</h1>
           <p class="is-size-5" style="text-align: justify;">
             We present NeX, a new approach to novel view synthesis based on enhancements of multiplane image (MPI) 
-            that can reproduce <b>NeX</b>t-level view-dependent effects---in real-time. Unlike traditional MPI that uses a set of simple RGBα planes, 
+            that can reproduce NeXt-level view-dependent effects---in real-time. Unlike traditional MPI that uses a set of simple RGBα planes, 
             our technique models view-dependent effects by instead parameterizing each pixel as a linear combination of basis functions learned from a neural network.
             Moreover, we propose a hybrid implicit-explicit modeling strategy that improves upon fine detail and produces state-of-the-art results.
             Our method is evaluated on benchmark forward-facing datasets as well as our newly-introduced dataset designed to test the limit of view-dependent modeling 
@@ -89,25 +75,59 @@
         </div>
       </div>
     </section>
+    <section class="hero is-light">
+      <div class="hero-body">
+        <div class="container" style="text-align: center;">
+          <div class="columns">
+            <div class="column"></div>
+            <div class="column">
+              <a href="assets/pdf/nex-paper.pdf" target="_blank">
+                <div>
+                  <img src="assets/images/paper.png">
+                </div>
+                Paper
+              </a>
+            </div>
+            <div class="column">
+              <div>
+                <img src="assets/images/coding.png">
+              </div>
+              Code [Soon]
+            </div>
+            <div class="column">
+              <div>
+                <img src="assets/images/our_dataset.png">
+              </div>
+              Data [Soon]
+            </div>
+            <div class="column"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
     <section class="hero is-primary" >
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
             Real-time rendering
           </h1>
+          <p class="subtitle">
+            *High / VR is recommend to use on high-end GPU and gigabit internet.
+          </p>
           <div class="columns is-desktop">
             <div class="column">
                 <div class="card">
                   <div class="card-image">
                     <figure class="image is-4by3">
-                      <img src="compare/images/saneh_jaan2/024_ours.jpg" alt="Shiny dataset">
+                      <img src="compare/images/saneh_jaan2/024_ours.jpg">
                     </figure>
                   </div>                  
                   <footer class="card-footer">
-                    <a href="#" class="card-footer-item">Lite</a>
-                    <a href="#" class="card-footer-item">Low</a>
-                    <a href="#" class="card-footer-item">High</a>
-                    <a href="#" class="card-footer-item">VR</a>
+                    <a href="viewer/mobile.html?scene=https://pureexe.github.io/food/640" class="card-footer-item">Mobile <br> (15.5 MB)</a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/food/800" class="card-footer-item">Low <br> (20.5 MB)</a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/food/1008" class="card-footer-item">High <br> (491 MB)</a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/food/1008&vr" class="card-footer-item">VR <br> (491 MB)</a>
                   </footer>
                 </div>
             </div>
@@ -115,35 +135,72 @@
               <div class="card">
                 <div class="card-image">
                   <figure class="image is-4by3">
-                    <img src="compare/images/wat_phrakaew2-2/024_ours.jpg" alt="Shiny dataset">
+                    <img src="compare/images/wat_phrakaew2-2/024_ours.jpg">
                   </figure>
                 </div>              
                 <footer class="card-footer">
-                  <a href="#" class="card-footer-item">Lite</a>
-                  <a href="#" class="card-footer-item">Low</a>
-                  <a href="#" class="card-footer-item">High</a>
-                  <a href="#" class="card-footer-item">VR</a>
+                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/crest/640" class="card-footer-item">Mobile <br> (18.7 MB)</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/800" class="card-footer-item">Low <br> (25.9 MB)</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008" class="card-footer-item">High <br> (466 MB)</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008&vr" class="card-footer-item">VR <br> (466 MB)</a>
                 </footer>
               </div>
             </div>
             <div class="column">
               <div class="card">
                 <div class="card-image">
-                  <figure class="image is-4by3">
-                    <img src="compare/images/optical_bottle/112_ours.jpg" alt="Shiny dataset">
+                  <figure class="image is-4by3 " >
+                    <img src="viewer/images/cd.jpg">
                   </figure>
                 </div>                
-                <footer class="card-footer">
-                  <a href="#" class="card-footer-item">Lite</a>
-                  <a href="#" class="card-footer-item">Low</a>
-                  <a href="#" class="card-footer-item">High</a>
-                  <a href="#" class="card-footer-item">VR</a>
+                <footer class="card-footer" style="text-align: center;">
+                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/cd/640" class="card-footer-item">Mobile <br> (14.7 MB)</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/800" class="card-footer-item">Low <br> (17.6 MB)</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008" class="card-footer-item">High <br> (309 MB)</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008&vr" class="card-footer-item">VR <br> (309 MB)</a>
                 </footer>
               </div>
             </div>
           </div>
           <div style="text-align: center;width: 100%;">
-            <a href="#" target="_blank" class="button is-danger">More Demo</a>
+            <a href="viewer/" class="button is-danger">More demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="hero is-dark">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Additional results
+          </h1>
+          <div class="columns">
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/biome_jar.mp4" type="video/mp4" />
+              </video>  
+            </div>
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/saneh_jaan2.mp4" type="video/mp4" />
+                
+              </video>
+            </div>           
+          </div>
+          <div class="columns">
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/jarroom.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/cake1.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <div style="text-align: center;width: 100%;">
+            <a href="#" target="_blank" class="button is-danger">More results (Youtube)</a>
           </div>
         </div>
       </div>
@@ -156,7 +213,7 @@
           </h1>
           <div class="columns is-desktop">
             <div class="column">
-              <a href="compare/frontface.html">
+              <a href="compare/shiny.html">
                 <div class="card">
                   <div class="card-image">
                     <figure class="image is-4by3">
@@ -222,40 +279,6 @@
         </div>
       </div>
     </section>
-    <section class="hero is-dark">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            Additional results
-          </h1>
-          <div class="columns">
-            <div class="column">
-              <video controls autoplay loop>
-                <source src="assets/video/addition/biome_jar.mp4" type="video/mp4" />
-              </video>  
-            </div>
-            <div class="column">
-              <video controls autoplay loop>
-                <source src="assets/video/addition/cake1.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="column">
-              <video controls autoplay loop>
-                <source src="assets/video/addition/jarroom.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <div class="column">
-              <video controls autoplay loop>
-                <source src="assets/video/addition/seasoning.mp4" type="video/mp4" />
-              </video>
-            </div>
-          </div>
-          <div style="text-align: center;width: 100%;">
-            <a href="#" target="_blank" class="button is-danger">More results (Youtube)</a>
-          </div>
-        </div>
-      </div>
-    </section>
     <section class="hero">
       <div class="hero-body">
         <div class="container">
@@ -267,10 +290,10 @@
               <a href="https://vistec.ist/" target="_blank">School of Information Science and Technology</a>
             </div>
             <div class="column">
-              <a href="https://vistec.ac.th/" target="_blank">VISTEC</a>
+              <a href="https://www.vistec.ac.th/" target="_blank">VISTEC</a>
             </div>
             <div class="column">
-              <a href="http://vistec.ac.th/admission/" target="_blank">Join us</a>
+              <a href="https://www.vistec.ac.th/admission/" target="_blank">Join us</a>
             </div>
           </div>
         </div>        

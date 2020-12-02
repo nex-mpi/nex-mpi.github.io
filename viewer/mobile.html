@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>WebGL Orbiter Renderer</title>
+    <link rel="stylesheet" href="css/jquery-ui.min.css?u=1" type="text/css">
+    <link rel="stylesheet" href="css/webgl.css?u=1" type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+	#motion-selector{
+		margin-left:0px;
+	}
+	.info {
+		width: 100vw;
+		max-width: 800px;
+	}
+	div.info > div{
+		margin-bottom:10px;
+	}
+	#rotation_plane, #rendered_planes, #show_plane, #spin_radius, #spin_speed{
+		display: block;
+		
+		width: calc(100% - 40px);
+     	margin-left:20px;
+		margin-right:20px;
+		
+		/*width: calc(100%);*/
+		margin-top:5px;
+		margin-bottom:5px;
+		
+	}
+  .center-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+  }
+	</style>
+  </head>
+
+  <body>
+    <div class="center-screen">
+      <div id="canvas-clip">
+        <canvas id="webgl-canvas"></canvas>
+      </div>
+      <canvas id="glcanvas"></canvas>
+      <canvas id="texturecanvas" style="display:none"></canvas>
+      <div class="info">
+        <span id="fps"></span>
+        <!--<b>Scene</b>: <span id="scenename"></span>-->
+        <div class="" id="rendered_planes_text">
+          <span class="desc">Rendered Planes:</span>
+          <span id="amount"></span>
+          <div id="rendered_planes"></div>
+        </div>
+
+        <div class="" id="show_plane_text">
+          <span class="desc">Show Plane:</span>
+          <span id="plane">0</span>
+          <div id="show_plane"></div>
+        </div>
+
+        <div id="rotation_plane_text" >
+          <span class="desc">Pivot Plane:</span>
+          <span id="center">0</span>
+          <div id="rotation_plane"></div>
+        </div>
+        <div class="hide-on-fullscreen" style="text-align: center;" onclick="fullScreenButton()">
+          <button class="ui-button ui-widget ui-corner-all">Full screen</button>
+        </div>
+
+      </div>
+      <div id="workspace"></div>
+    </div>
+  </body>
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
+  <script src="js/jquery-ui-touch-punch.js"></script>
+  
+
+  <script src="js/third-party/gl-matrix-min.js"></script>
+
+  <script src="js/third-party/wglu/wglu-program.js"></script>
+  <script src="js/third-party/wglu/wglu-stats.js"></script>
+  <script src="js/third-party/wglu/wglu-texture.js"></script>
+  <script src="js/third-party/wglu/wglu-url.js"></script>
+
+  <script src="js/vr-samples-util.js"></script>
+  <script src="js/gl-utils.js"></script>
+  <script src="js/loader_lowpower.js?u=1"></script>
+  <script>
+    function fullScreenButton(e){
+      openFullscreen();
+      window.setTimeout(function(){
+        document.querySelector('.hide-on-fullscreen').style.display = 'none';
+      },20);
+    }
+    function openFullscreen() {
+      let elem = document.body;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
+    }
+    if (document.addEventListener){
+      document.addEventListener('fullscreenchange', exitFullscreenHandler, false);
+      document.addEventListener('mozfullscreenchange', exitFullscreenHandler, false);
+      document.addEventListener('MSFullscreenChange', exitFullscreenHandler, false);
+      document.addEventListener('webkitfullscreenchange', exitFullscreenHandler, false);
+    }
+
+    function exitFullscreenHandler(){
+      if (document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null){
+        document.querySelector('.hide-on-fullscreen').style.display = 'block';
+      }
+    }
+  </script>
+</html>
