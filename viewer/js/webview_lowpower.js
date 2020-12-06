@@ -227,7 +227,7 @@ $( document ).ready(function() {
         mat4.translate(mv, mv, [0, 0.0, center]); 
       }
       scene.drawSceneNoVR(mv, deltaTime, firstPlane, lastPlane);
-    }	
+    }
   }
   requestAnimationFrame(render);
 

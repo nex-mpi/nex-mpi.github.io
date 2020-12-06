@@ -73,6 +73,10 @@ class Scene {
     this.initSceneContext();
   }
 
+  setFrameBuffer(fb){
+    this.fb = fb;
+  }
+
   resize(iw, ih) {
     const gl = this.gl;
     this.vivew = iw;
@@ -309,76 +313,65 @@ class Scene {
       out vec4 fragmentColor;
 
       void main(void) {
-        vec4 vc = texture(uColor, vTextureCoord_c); 
         vec4 va = texture(uAlpha, vTextureCoord_a);
-
-        vec3 view = normalize(vertexPos.xyz - cameraPos);
-        float tx = view.x;
-        float ty = view.y;
-        float tz = view.z;
-        //tx = 0.0;
-        //ty = 0.0;
-
-        const float rangex = 0.7;
-        const float rangey = 0.6;
-
-        vec2 loc = clamp(vec2(tx / rangex, ty / rangey) * 0.5 + 0.5, 0.0, 1.0); // range = 0 - 1;
-
-        const float basis_width = 400.0;
-        const float basis_n = 8.0;
-
-        loc.x = loc.x * (basis_width - 1.0) / (basis_n * basis_width) + 0.5 / (basis_n * basis_width);
-        loc.y = loc.y * (basis_width - 1.0) / basis_width + 0.5 / basis_width;
-
-        vec2 shift = vec2(1.0 / basis_n, 0);
-
-        vec4 b0 = texture(uBasis, loc              ) * 2.0 - 1.0;
-        vec4 b1 = texture(uBasis, loc + shift      ) * 2.0 - 1.0;
-        vec4 b2 = texture(uBasis, loc + shift * 2.0) * 2.0 - 1.0;
-        vec4 b3 = texture(uBasis, loc + shift * 3.0) * 2.0 - 1.0;
-        vec4 b4 = texture(uBasis, loc + shift * 4.0) * 2.0 - 1.0;
-        vec4 b5 = texture(uBasis, loc + shift * 5.0) * 2.0 - 1.0;
-        vec4 b6 = texture(uBasis, loc + shift * 6.0) * 2.0 - 1.0;
-        vec4 b7 = texture(uBasis, loc + shift * 7.0) * 2.0 - 1.0;
-
-        vec4 v0 = texture(uBasis0, vTextureCoord_c) * 2.0 - 1.0;
-        vec4 v1 = texture(uBasis1, vTextureCoord_c) * 2.0 - 1.0;
-        vec4 v2 = texture(uBasis2, vTextureCoord_c) * 2.0 - 1.0;
-        vec4 v3 = texture(uBasis3, vTextureCoord_c) * 2.0 - 1.0;
-        vec4 v4 = texture(uBasis4, vTextureCoord_c) * 2.0 - 1.0;
-        vec4 v5 = texture(uBasis5, vTextureCoord_c) * 2.0 - 1.0;
-        vec4 v6 = texture(uBasis6, vTextureCoord_c) * 2.0 - 1.0;
-        vec4 v7 = texture(uBasis7, vTextureCoord_c) * 2.0 - 1.0;
-
-        if (pivot == 0) {
-          fragmentColor = vc
-            + v0 * b0
-            + v1 * b1
-            + v2 * b2
-            + v3 * b3
-            + v4 * b4
-            + v5 * b5
-            + v6 * b6
-            + v7 * b7;
-          //fragmentColor = vc;
-            //+ v0 * 0.0
-            //+ v1 * 0.0
-            //+ v2 * 0.0
-            //+ v3 * 0.0
-            //+ v4 * 0.0
-            //+ v5 * 0.0
-            //+ v6 * 0.0
-            //+ v7 * 0.0;
-        } else {
-          fragmentColor = vec4(1.0, 0.0, 0.0, 1.0);
+        float alpha = va[alpha_texture_channel];
+        if (pivot != 0) {
+          fragmentColor = vec4(1.0, 0.0, 0.0, alpha);
+          return ;
         }
-
-        fragmentColor = clamp(fragmentColor, 0.0, 1.0);
-        fragmentColor.a = va[alpha_texture_channel];
-        //float px = vertexPos.x / vertexPos.z;
-        //float py = vertexPos.y / vertexPos.z;
-        //if (px > 0.8 || px < -0.8)
-          //fragmentColor.a = 0.0;
+        if(true || alpha > 0.0){          
+          vec4 vc = texture(uColor, vTextureCoord_c); 
+          if(true || alpha > 0.05){
+            vec3 view = normalize(vertexPos.xyz - cameraPos);
+            float tx = view.x;
+            float ty = view.y;
+            float tz = view.z;
+            const float rangex = 0.7;
+            const float rangey = 0.6;
+  
+            vec2 loc = clamp(vec2(tx / rangex, ty / rangey) * 0.5 + 0.5, 0.0, 1.0); // range = 0 - 1;
+  
+            const float basis_width = 400.0;
+            const float basis_n = 8.0;
+  
+            loc.x = loc.x * (basis_width - 1.0) / (basis_n * basis_width) + 0.5 / (basis_n * basis_width);
+            loc.y = loc.y * (basis_width - 1.0) / basis_width + 0.5 / basis_width;
+  
+            vec2 shift = vec2(1.0 / basis_n, 0);
+  
+            vec4 b0 = texture(uBasis, loc              ) * 2.0 - 1.0;
+            vec4 b1 = texture(uBasis, loc + shift      ) * 2.0 - 1.0;
+            vec4 b2 = texture(uBasis, loc + shift * 2.0) * 2.0 - 1.0;
+            vec4 b3 = texture(uBasis, loc + shift * 3.0) * 2.0 - 1.0;
+            vec4 b4 = texture(uBasis, loc + shift * 4.0) * 2.0 - 1.0;
+            vec4 b5 = texture(uBasis, loc + shift * 5.0) * 2.0 - 1.0;
+            vec4 b6 = texture(uBasis, loc + shift * 6.0) * 2.0 - 1.0;
+            vec4 b7 = texture(uBasis, loc + shift * 7.0) * 2.0 - 1.0;
+  
+            vec4 v0 = texture(uBasis0, vTextureCoord_c) * 2.0 - 1.0;
+            vec4 v1 = texture(uBasis1, vTextureCoord_c) * 2.0 - 1.0;
+            vec4 v2 = texture(uBasis2, vTextureCoord_c) * 2.0 - 1.0;
+            vec4 v3 = texture(uBasis3, vTextureCoord_c) * 2.0 - 1.0;
+            vec4 v4 = texture(uBasis4, vTextureCoord_c) * 2.0 - 1.0;
+            vec4 v5 = texture(uBasis5, vTextureCoord_c) * 2.0 - 1.0;
+            vec4 v6 = texture(uBasis6, vTextureCoord_c) * 2.0 - 1.0;
+            vec4 v7 = texture(uBasis7, vTextureCoord_c) * 2.0 - 1.0;
+  
+            fragmentColor = vc
+                + v0 * b0
+                + v1 * b1
+                + v2 * b2
+                + v3 * b3
+                + v4 * b4
+                + v5 * b5
+                + v6 * b6
+                + v7 * b7;
+              fragmentColor = clamp(fragmentColor, 0.0, 1.0);
+            }else{
+              fragmentColor = vc;
+            }
+            fragmentColor.a = alpha;            
+        }
       }
     `;
 
@@ -913,7 +906,12 @@ class Scene {
     var blendPlanes = this.delaunay ? 3 : Math.min(2, this.nMpis); 
 
     var tmp = mat4.create();
-    mat4.invert(tmp, postGLMatrix);
+
+    var cameraMotion = mat4.clone(postGLMatrix);
+	
+    if (eyeMatrix) 
+      mat4.multiply(cameraMotion, eyeMatrix, cameraMotion);
+    mat4.invert(tmp, cameraMotion);
     var cameraPos = vec3.fromValues(tmp[12], -tmp[13], -tmp[14]); 
 
     for (var ii = 0; ii < blendPlanes; ii++) {

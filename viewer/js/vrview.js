@@ -1,8 +1,8 @@
 // global variable that define in normal webview
 // use to avoid undefined crash
 var is_dolly = 0;
-var pivoting = -1;
 var dolly = 1;
+var pivoting = -1;
 
 $( document ).ready(function() {
   document.getElementById("glcanvas").remove();
@@ -386,9 +386,7 @@ $( document ).ready(function() {
 
       if (vrDisplay.isPresenting) {
         scene.drawScene(currentPose, frameData.leftProjectionMatrix, frameData.leftViewMatrix, 0, 0, webglCanvas.width * 0.5, webglCanvas.height, true, 0, false);
-
         scene.drawScene(currentPose, frameData.rightProjectionMatrix, frameData.rightViewMatrix, webglCanvas.width * 0.5, 0, webglCanvas.width * 0.5, webglCanvas.height, false, 0, true);
-        console.log("done");
 
         vrDisplay.submitFrame();
       } else {
