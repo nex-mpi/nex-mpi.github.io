@@ -624,12 +624,6 @@ class Scene {
     if (eyeMatrix) 
       mat4.multiply(modelViewMatrix, eyeMatrix, modelViewMatrix);
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    if (clearScene) {
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    }
-
     var blendPlanes = this.delaunay ? 3 : Math.min(2, this.nMpis); 
 
     var tmp = mat4.create();
@@ -639,9 +633,11 @@ class Scene {
     mat4.invert(tmp, cameraMotion);
     var cameraPos = vec3.fromValues(tmp[12], -tmp[13], -tmp[14]); 
 
-    this.setFrameBuffer(null)
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);  
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    if (clearScene) {
+      this.setFrameBuffer(null)
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);  
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    }
 
     var start = 0;
     var end = this.nPlanes;
@@ -652,7 +648,7 @@ class Scene {
 
     const mvi = this.mvi[0];
 
-    gl.viewport(0, 0, cw, ch);
+    gl.viewport(cx, cy, cw, ch);
     this.setupProgram(projectionMatrix, modelViewMatrix, cameraPos);
     this.drawPlanes(start, end);
   }
