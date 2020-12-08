@@ -74,6 +74,103 @@ function getData(image_c, image_a) {
   return {"data_c": data_c, "data_a": data_a};
 }
 
+function getData(img) {
+  let canvas = document.getElementById('texturecanvas');
+  let gl = canvas.getContext("webgl2");
+  let texture = gl.createTexture();
+  const framebuffer = gl.createFramebuffer();
+
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+
+  let data_c = new Uint8Array(img.width * img.height * 4);
+
+  // Using RGB seems to cause a bug on windows, switched to RGBA
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+  gl.drawBuffers([gl.COLOR_ATTACHMENT0]);
+  gl.readPixels(0, 0, img.width, img.height, gl.RGBA, gl.UNSIGNED_BYTE, data_c);
+
+  return data_c;
+}
+
+function loadTextureRGB(gl, url_0, url_1, url_2, callback) {
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+
+  gl.getExtension('OES_texture_float');
+  gl.getExtension('OES_texture_float_linear');
+
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const width = 1;
+  const height = 1;
+  const border = 0;
+  const srcFormat = gl.RGBA;
+  const srcType = gl.UNSIGNED_BYTE;
+  const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                width, height, border, srcFormat, srcType,
+                null);
+
+  const image_0 = new Image();
+  const image_1 = new Image();
+  const image_2 = new Image();
+  image_0.crossOrigin = "anonymous";
+  image_1.crossOrigin = "anonymous";
+  image_2.crossOrigin = "anonymous";
+  var count = 0;
+
+  function process() {
+    let data_0 = getData(image_0);
+    let data_1 = getData(image_1);
+    let data_2 = getData(image_2);
+    
+    let n = image_0.width * image_0.height * 4;
+    var data_combined = new Uint8Array(n);
+    let cc = 0, ca = 0;
+    for (let i = 0; i < n; i += 4) {
+      data_combined[i] = data_0[i];
+      data_combined[i+1] = data_1[i];
+      data_combined[i+2] = data_2[i];
+      data_combined[i+3] = 0;
+    }
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                  image_0.width, image_0.height, i,
+                  srcFormat, srcType, data_combined);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    callback("Alpha");
+  }
+
+  image_0.onload = function() {
+    count++;
+    if (count == 3) process();
+  };
+  image_0.src = url_0;
+  image_1.onload = function() {
+    count++;
+    if (count == 3) process();
+  };
+  image_1.src = url_1;
+  image_2.onload = function() {
+    count++;
+    if (count == 3) process();
+  };
+  image_2.src = url_2;
+
+  return texture;
+}
+
 function loadTexture2(gl, url_c, url_a) {
 
   const texture = gl.createTexture();
@@ -159,6 +256,7 @@ function loadTexture2(gl, url_c, url_a) {
 
   return texture;
 }
+
 function loadTexture(gl, url, callback, interpolate=gl.LINEAR) {
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);

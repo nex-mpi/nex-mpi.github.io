@@ -113,7 +113,7 @@ $( document ).ready(function() {
       }
     }
 
-    if (true) {
+    if (false) {
       if(typeof max_viewing_right !== 'undefined'){
         if (leftright > max_viewing_right) leftright = max_viewing_right;
       }
