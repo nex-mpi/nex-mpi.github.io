@@ -297,11 +297,14 @@ $( document ).ready(function() {
 
 
   if ($("#rotation_plane").length) {
+    var default_pivot = parseInt(scene.nPlanes/2.0);
+    $("#center").html(default_pivot);
+    center = scene.planes_is_2d ? planes[0][default_pivot]:planes[default_pivot];
     $("#rotation_plane").slider({
       range: false,
       min: 0,
       max: scene.nPlanes-1,
-      values: [ 0 ],
+      values: [ default_pivot ],
       slide: function( event, ui ) {
         $("#center").html(ui.values[ 0 ]);
         if (scene.planes_is_2d)
@@ -403,7 +406,7 @@ $( document ).ready(function() {
   }
 
   //determine movement
-  var movement_type = 'motion_none';
+  var movement_type = 'motion_spiral_zoom';
   $("#motion-selector").change(function(){
     movement_type = $('input[name="motion"]:checked').val();
     if (movement_type == "motion_none") {

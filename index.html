@@ -20,6 +20,18 @@
       .card-footer{
         text-align: center;
       }
+      .author{
+        font-size:1.2rem
+      }
+      @media only screen and (max-width: 600px) {
+        .author{
+          font-size:0.7rem
+        }
+        .equal-contribution{
+          font-size:0.65rem
+        }
+      }
+      
     </style>
   </head>
   <body>
@@ -30,7 +42,7 @@
             NeX: Real-time View Synthesis with Neural Basis Expansion
           </h1>
           <!-- <h2 class="subtitle"> [Conference name (soon)] </h2> -->
-          <div class="columns">
+          <div class="columns author is-mobile">
             <div class="column">
               Suttisak Wizadwongsa*
             </div>
@@ -41,13 +53,15 @@
               Jiraphon Yenphraphai*
             </div>
             <div class="column">
-              <a herf="https://supasorn.com" target="_blank">Supasorn Suwajanakorn</a> 
+              Supasorn Suwajanakorn 
             </div>
           </div>
           <div>
+          </div>
+          <div class="author">
             VISTEC - Vidyasirimedhi Institute of Science and Technology
           </div>
-          <div style="color:#909090">
+          <div class="equal-contribution"style="color:#909090">
             *equal contribution
           </div>
         </div>
@@ -75,7 +89,7 @@
           </p>
         </div>
       </div>
-    </section>
+    </section> 
     <section class="hero is-light">
       <div class="hero-body">
         <div class="container" style="text-align: center;">
@@ -111,10 +125,10 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            Real-time rendering
+            Real-time demo
           </h1>
           <p class="subtitle">
-            *High / VR is recommend to use on high-end GPU.
+            *A high-end GPU recommened for High and VR modes.
           </p>
           <div class="columns is-desktop">
             <div class="column">
@@ -203,7 +217,7 @@
             </div>
           </div>
           <div style="text-align: center;width: 100%;">
-            <a href="#" target="_blank" class="button is-danger">More results (Youtube)</a>
+            <a href="result/1.html" target="_blank" class="button is-danger">More results</a>
           </div>
         </div>
       </div>
@@ -295,6 +309,13 @@
             <div class="column">
               <a href="https://www.vistec.ac.th/" target="_blank">VISTEC</a>
             </div>
+            <!--
+            <div class="column">
+              <a href="https://www.vistec.ac.th/admission/" target="_blank">Join us</a>
+            </div>
+            -->
+          </div>
+          <div class="columns" style="text-align: center;">
             <div class="column">
               <a href="https://www.vistec.ac.th/admission/" target="_blank">Join us</a>
             </div>
