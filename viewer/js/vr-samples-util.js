@@ -88,15 +88,20 @@ window.VRSamplesUtil = (function () {
     if (!buttonContainer) {
       buttonContainer = document.createElement("div");
       buttonContainer.id = "vr-sample-button-container";
+      buttonContainer.style.textAlign = "center";
+      buttonContainer.style.left = "50%";
+      buttonContainer.style.transform = "translate(-50%, 0)";
+ 
       buttonContainer.style.fontFamily = "sans-serif";
       buttonContainer.style.position = "absolute";
       buttonContainer.style.zIndex = "999";
+      /*
       buttonContainer.style.left = "0";
       buttonContainer.style.bottom = "0";
       buttonContainer.style.right = "0";
       buttonContainer.style.margin = "0";
       buttonContainer.style.padding = "0";
-      buttonContainer.align = "right";
+      buttonContainer.align = "right";*/
       document.body.appendChild(buttonContainer);
     }
     return buttonContainer;

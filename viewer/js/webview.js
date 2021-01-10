@@ -14,7 +14,9 @@ $( document ).ready(function() {
   canvas.width = w;
   canvas.height = h;
 
-  const gl = canvas.getContext('webgl2');
+  // Webgl is weird and doing alpha premultipled. need {alpha: false} to disable it.
+  // https://stackoverflow.com/questions/39341564/webgl-how-to-correctly-blend-alpha-channel-png
+  const gl = canvas.getContext('webgl2', {alpha: false});
   if (!gl) {
     alert('Unable to initialize WebGL. Your browser or machine may not support it.');
     return;
@@ -39,7 +41,7 @@ $( document ).ready(function() {
   var tx = 0, ty = 0;
   var firstPlane = 0;
   var lastPlane = scene.nPlanes - 1;
-  var spin_speed = 15, spin_radius = 30;
+  var spin_speed = 30, spin_radius = 30;
   var anim_time = 0;
 
   if (Array.isArray(planes[0])) {
@@ -84,16 +86,16 @@ $( document ).ready(function() {
   var mouseMove = function(e) {
     if (!drag) return false;
     
-    if(pitch){
+    if (pitch) {
       var dist =  Math.hypot(
         e.touches[0].pageX - e.touches[1].pageX,
         e.touches[0].pageY - e.touches[1].pageY
       );
       var delta = old_pitch - dist;
-      zoom += delta * (planes[0][1] - planes[0][0])*0.25;
+      zoom += delta * (planes[0][1] - planes[0][0]) * 0.25;
       scroll_v = zoom;
       old_pitch = dist;
-    }else{
+    } else {
       if (e.touches == undefined) 
         mx = e.pageX, my = e.pageY;
       else
@@ -113,18 +115,25 @@ $( document ).ready(function() {
       }
     }
 
-    if (false) {
-      if(typeof max_viewing_right !== 'undefined'){
-        if (leftright > max_viewing_right) leftright = max_viewing_right;
-      }
-      if(typeof max_viewing_left !== 'undefined'){
-        if (leftright < max_viewing_left) leftright = max_viewing_left;
-      }
-      if(typeof max_viewing_up !== 'undefined'){
-        if (updown > max_viewing_up) updown = max_viewing_up;
-      }
-      if(typeof max_viewing_down !== 'undefined'){
-        if (updown < max_viewing_down) updown = max_viewing_down;
+    if (true) {
+      //if(typeof max_viewing_right !== 'undefined'){
+        //if (leftright > max_viewing_right) leftright = max_viewing_right;
+      //}
+      //if(typeof max_viewing_left !== 'undefined'){
+        //if (leftright < max_viewing_left) leftright = max_viewing_left;
+      //}
+      //if(typeof max_viewing_up !== 'undefined'){
+        //if (updown > max_viewing_up) updown = max_viewing_up;
+      //}
+      //if(typeof max_viewing_down !== 'undefined'){
+        //if (updown < max_viewing_down) updown = max_viewing_down;
+      //}
+      let rad = leftright * leftright + updown * updown;
+      let t = 0.03;
+      if (rad > t) {
+        let sc = Math.sqrt(t) / Math.sqrt(rad);
+        leftright *= sc;
+        updown *= sc;
       }
     }
     e.preventDefault();
@@ -133,7 +142,7 @@ $( document ).ready(function() {
   var mousewheel = function(e) {
     var e = window.event || e; // old IE support
     var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-    zoom += delta * (planes[0][1] - planes[0][0]) * 4;
+    zoom += delta * (planes[0][Math.floor(planes[0].length * 0.1)] - planes[0][0]) * 0.1;
     scroll_v = zoom;
   }
 
@@ -147,6 +156,15 @@ $( document ).ready(function() {
   canvas.addEventListener("touchend", mouseUp, false);
   canvas.addEventListener("touchmove", mouseMove, false);
 
+  $(document).keydown(function(e) {
+    if (e.which == 32) {
+      tx = 0;
+      ty = 0;
+      leftright = 0;
+      updown = 0;
+      zoom = 0;
+    }
+  });
 
   var then = 0;
   var frameCount = 0;
@@ -160,22 +178,21 @@ $( document ).ready(function() {
     then = now;
 
     if (spin_speed > 0) {
-      anim_time += deltaTime * spin_speed * 0.1;
+      anim_time += deltaTime * spin_speed * 0.1 * 0.5;
 
       if (movement_type == "motion_spiral" || movement_type == "motion_horizontal")
-        //leftright = -0.08 -Math.sin(anim_time) * spin_radius / 500;
-        leftright = -Math.sin(anim_time) * spin_radius / 500;
+        leftright = -Math.sin(anim_time) * spin_radius / 1000;
       if (movement_type == "motion_spiral" || movement_type == "motion_vertical")
-        updown = Math.cos(anim_time) * spin_radius / 500;
+        updown = Math.cos(anim_time) * spin_radius / 1000;
 
       if (movement_type == "motion_spiral")
-        spiral_inout = Math.sin(anim_time * 0.5) * spin_radius / 500;
+        spiral_inout = Math.sin(anim_time * 0.5) * spin_radius / 1000;
 
       if (movement_type == "motion_mix") {
-        spiral_inout = Math.sin(anim_time * 0.5) * spin_radius / 500;
+        spiral_inout = Math.sin(anim_time * 0.5) * spin_radius / 1000;
       }
 
-      step_radius += deltaTime * spin_speed;
+      step_radius += deltaTime * spin_speed * 0.5;
     }
     //console.log(deltaTime);
 
@@ -185,16 +202,20 @@ $( document ).ready(function() {
         dolly = 1;
         let theta = step_radius / radius_total * 2 * Math.PI;
         var zrate = 0.5;
-        var radius_scale = spin_radius / 30;
+        var radius_scale = 1;
+
+        var normal = 80;
+        radius_scale = spin_radius / normal;
 
         var radius = [[1.0, 1.0, 1.0]];
         if (typeof rads !== 'undefined') {
           radius[0] = rads[0];
         }
         var focus_plane = center;
-        if (typeof focal !== 'undefined') {
-          focus_plane = focal;
-        }
+        //if (typeof focal !== 'undefined') {
+          //focus_plane = focal;
+          //console.log(focus_plane + "," + center);
+        //}
 
         var cameraPosition = vec3.fromValues(
           Math.cos(theta) * radius[0][0] * radius_scale,
@@ -215,6 +236,7 @@ $( document ).ready(function() {
           ext2[8] *= -1;
           ext2[13] *= -1;
           ext2[14] *= -1;
+          mat4.translate(ext2, ext2, [tx, ty, 0]); 
           mat4.multiply(mv, mv, ext2);
         }
       } else if (movement_type == 'motion_mix') {
@@ -235,7 +257,7 @@ $( document ).ready(function() {
         let xys = 1;
         //radius[0][0] = 0;
         //radius[0][1] = 0;
-        zoom = (Math.sin(theta) - 1) * radius[0][2] * 1;
+        zoom = (Math.sin(theta) - 1) * radius[0][2] * 2;
         //radius_scale *= 0.3 + (1 + Math.cos(theta)) / 3;
         radius_scale *= 0.5;
         var cameraPosition = vec3.fromValues(
@@ -257,6 +279,7 @@ $( document ).ready(function() {
           ext2[8] *= -1;
           ext2[13] *= -1;
           ext2[14] *= -1;
+          mat4.translate(ext2, ext2, [tx, ty, 0]); 
           mat4.multiply(mv, mv, ext2);
         }
       } else {
@@ -279,7 +302,13 @@ $( document ).ready(function() {
     
     if (scene.ready) {
       if (finishedLoading == 0) {
-        $("#fps").text("Initializing...");
+        $("#percmsg").html(scene.textureLoadedCount + " out of " + scene.textureTotalCount);
+        $("#pbar").css("width", 200 * (scene.textureLoadedCount / scene.textureTotalCount) + "px");
+        $("#msg").hide();
+        $("#s1").show();
+        $(".info").show();
+        s1.setHeight(h - 50);
+        s1.update();
         finishedLoading = 1;
       }
       frameCount ++;
@@ -290,88 +319,53 @@ $( document ).ready(function() {
         frameCount = 0;
       }
     } else {
-      $("#fps").text("Loading textures: " + scene.textureLoadedCount + " out of " + scene.textureTotalCount);
+      $("#percmsg").html(scene.textureLoadedCount + " out of " + scene.textureTotalCount);
+      $("#pbar").css("width", 200 * (scene.textureLoadedCount / scene.textureTotalCount) + "px");
     }
   }
   requestAnimationFrame(render);
 
+  let default_pivot = Math.ceil(scene.nPlanes * 0.3);
+  if (typeof focal !== 'undefined') {
+    let mn = 1e10;
+    for (let i = 1; i < planes[0].length; i++) {
+      let d = Math.abs(focal - planes[0][i]);
+      if (d < mn) {
+        mn = d;
+        default_pivot = i;
+        center = planes[0][i];
+      }
+    }
+    //focus_plane = focal;
+    //console.log(focus_plane + "," + center);
+  }
 
-  if ($("#rotation_plane").length) {
-    var default_pivot = parseInt(scene.nPlanes/2.0);
-    $("#center").html(default_pivot);
-    center = scene.planes_is_2d ? planes[0][default_pivot]:planes[default_pivot];
-    $("#rotation_plane").slider({
-      range: false,
-      min: 0,
-      max: scene.nPlanes-1,
-      values: [ default_pivot ],
-      slide: function( event, ui ) {
-        $("#center").html(ui.values[ 0 ]);
-        if (scene.planes_is_2d)
-          center = planes[0][ui.values[0]];
-        else
-          center = planes[ui.values[0]];
-        pivoting = ui.values[0];
-      },
-      start: function(event, ui) {
-        $("#rotation_plane_text").addClass("sliding_active");
-      },
-      stop: function(event, ui) {
-        $("#rotation_plane_text").removeClass("sliding_active");
-        pivoting = -1;
-      }
-    });
-  }
-  if ($("#show_plane").length) {
-    $("#show_plane").slider({
-      range: false,
-      min: 0,
-      max: scene.nPlanes-1,
-      values: [ 0 ],
-      slide: function( event, ui ) {
-        $("#plane").html(ui.values[ 0 ]);
-        $("#rendered_planes").slider("values", [ui.values[0], ui.values[0]]);
-        firstPlane = ui.values[0];
-        lastPlane = ui.values[0];
-        $( "#amount" ).html(ui.values[ 0 ] + " - " + ui.values[ 0 ] );
-      },
-      start: function(event, ui) {
-        $("#show_plane_text").addClass("sliding_active");
-        $("#rendered_planes_text").addClass("sliding_active");
-      },
-      stop: function(event, ui) {
-        $("#show_plane_text").removeClass("sliding_active");
-        $("#rendered_planes_text").removeClass("sliding_active");
-      }
-    });
-  }
-  if ($("#rendered_planes").length) {
-    $("#rendered_planes").slider({
-      range: true,
-      min: 0,
-      max: scene.nPlanes-1,
-      values: [ 0, scene.nPlanes-1 ],
-      slide: function( event, ui ) {
-        firstPlane = ui.values[0];
-        lastPlane = ui.values[1];
-        $( "#amount" ).html(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-      },
-      start: function(event, ui) {
-        $("#rendered_planes_text").addClass("sliding_active");
-      },
-      stop: function(event, ui) {
-        $("#rendered_planes_text").removeClass("sliding_active");
-      }
-    });
-    $("#amount" ).html( "" + $( "#rendered_planes" ).slider( "values", 0 ) +
-      " - " + $( "#rendered_planes" ).slider( "values", 1 ) );
-  }
+  var s1 = new RangeSlider(
+      $("#s1"), 
+      scene.nPlanes, 
+      0,
+      scene.nPlanes-1, 
+      default_pivot, function(mn, mx, pv, shouldChangePivot) {
+    
+    if (shouldChangePivot) {
+      pivoting = pv;
+      if (scene.planes_is_2d)
+        center = planes[0][pv];
+      else
+        center = planes[pv];
+    }
+    firstPlane = mn;
+    lastPlane = mx;
+  }, function() {
+    pivoting = -1;
+  }); 
+
   if ($("#spin_radius").length) {
     $("#spin_radius").slider({
       range: false,
       min: 0,
       max: 100,
-      values: [ 30 ],
+      values: [ 50 ],
       disabled: true,
       slide: function( event, ui ) {
         $("#radius").html(ui.values[ 0 ]);
@@ -390,7 +384,7 @@ $( document ).ready(function() {
       range: false,
       min: 0,
       max: 100,
-      values: [ 15 ],
+      values: [ 50 ],
       disabled: true,
       slide: function( event, ui ) {
         $("#speed").html(ui.values[ 0 ]);
@@ -406,9 +400,11 @@ $( document ).ready(function() {
   }
 
   //determine movement
-  var movement_type = 'motion_spiral_zoom';
+  var movement_type = 'motion_none';
   $("#motion-selector").change(function(){
-    movement_type = $('input[name="motion"]:checked').val();
+    //movement_type = $('input[name="motion"]:checked').val();
+    movement_type = this.value;
+
     if (movement_type == "motion_none") {
       $("#spin_speed").slider("disable");
       $("#spin_radius").slider("disable");

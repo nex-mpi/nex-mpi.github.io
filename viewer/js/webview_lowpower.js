@@ -116,18 +116,13 @@ $( document ).ready(function() {
       }
     }
 
-    if (false) {
-      if(typeof max_viewing_right !== 'undefined'){
-        if (leftright > max_viewing_right) leftright = max_viewing_right;
-      }
-      if(typeof max_viewing_left !== 'undefined'){
-        if (leftright < max_viewing_left) leftright = max_viewing_left;
-      }
-      if(typeof max_viewing_up !== 'undefined'){
-        if (updown > max_viewing_up) updown = max_viewing_up;
-      }
-      if(typeof max_viewing_down !== 'undefined'){
-        if (updown < max_viewing_down) updown = max_viewing_down;
+    if (true) {
+      let rad = leftright * leftright + updown * updown;
+      let t = 0.03;
+      if (rad > t) {
+        let sc = Math.sqrt(t) / Math.sqrt(rad);
+        leftright *= sc;
+        updown *= sc;
       }
     }
     e.preventDefault();
@@ -152,6 +147,15 @@ $( document ).ready(function() {
   canvas.addEventListener("touchend", mouseUp, false);
   canvas.addEventListener("touchmove", mouseMove, false);
 
+  $(document).keydown(function(e) {
+    if (e.which == 32) {
+      tx = 0;
+      ty = 0;
+      leftright = 0;
+      updown = 0;
+      zoom = 0;
+    }
+  }); 
 
   var then = 0;
   var frameCount = 0;
@@ -181,6 +185,8 @@ $( document ).ready(function() {
     //console.log(deltaTime);
 
     if (scene.ready) {
+      $("#msg").hide();
+
       var mv = mat4.create();
       if (movement_type == "motion_spiral_zoom") {
         let theta = step_radius / radius_total * 2 * Math.PI;
@@ -232,18 +238,18 @@ $( document ).ready(function() {
   requestAnimationFrame(render);
 
   function texture_status(){
-    $("#fps").text("Loading textures: " + scene.textureLoadedCount + " out of " + scene.textureTotalCount);
-    if(scene.textureLoadedCount < scene.textureTotalCount){
+    $("#percmsg").html(scene.textureLoadedCount + " out of " + scene.textureTotalCount);
+    $("#pbar").css("width", 200 * (scene.textureLoadedCount / scene.textureTotalCount) + "px");    if(scene.textureLoadedCount < scene.textureTotalCount){
       setTimeout(texture_status,100);
     }else{
-      $("#fps").text("");
+      $(".info").show();
+      $("#canvas-clip").show();
     }
   }
-  $("#fps").text("Initializing...");
   texture_status();
 
   if ($("#rotation_plane").length) {
-    var default_pivot = parseInt(scene.nPlanes/2.0);
+    var default_pivot = Math.ceil(scene.nPlanes * 0.3);
     $("#center").html(default_pivot);
     center = scene.planes_is_2d ? planes[0][default_pivot]:planes[default_pivot];
     $("#rotation_plane").slider({

@@ -95,6 +95,73 @@ function getData(img) {
 
   return data_c;
 }
+function getPixelsFromTexture(gl, texture, height, width){
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  var pixels = new Uint8Array(width * height * 4);
+  var fb = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+  gl.framebufferTexture2D(
+    gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0,
+    gl.TEXTURE_2D, texture, 0
+  );
+  gl.drawBuffers([gl.COLOR_ATTACHMENT0]);
+  gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+  // Unbind the framebuffer
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  return pixels;
+}
+function textureBasis8to6(gl, textures, height, width){
+  var outputTexture = [];
+  var raw_pixels = textures.map(function(texture){
+    return getPixelsFromTexture(gl, texture, height, width);
+  });
+  //convert from 8 to 6
+  var pixels_buffer = [];
+  for(var i=0; i < 6; i++){
+    target = new Uint8Array(height * width * 4);
+    for(var j=0; j<target.length; j++){
+      target[j] = 127;
+    }
+    pixels_buffer.push(target);
+  }
+  for(var i = 0; i < width * height * 4; i+=4){
+    pixels_buffer[0][i] = raw_pixels[0][i];
+  }
+  raw_pixels.forEach(function(pixels, basisId){
+    var r_i = parseInt((basisId*3 + 0) / 4);
+    var g_i = parseInt((basisId*3 + 1) / 4);
+    var b_i = parseInt((basisId*3 + 2) / 4);
+    var r_c = (basisId*3 + 0) % 4;
+    var g_c = (basisId*3 + 1) % 4;
+    var b_c = (basisId*3 + 2) % 4;
+    for(var i = 0; i < height * width; i++){
+      var p = i*4;
+      pixels_buffer[r_i][p + r_c] = pixels[p + 0];
+      pixels_buffer[g_i][p + g_c] = pixels[p + 1];
+      pixels_buffer[b_i][p + b_c] = pixels[p + 2];
+    }
+  });
+  raw_pixels = null; //tell gc to remove raw pixel
+  const level = 0;
+  const internalFormat = gl.RGBA;
+  const border = 0;
+  const srcFormat = gl.RGBA;
+  const srcType = gl.UNSIGNED_BYTE;
+  for(var  i = 0; i < 6; i++){
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+      width, height, border, srcFormat, srcType, pixels_buffer[i]);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    outputTexture.push(texture);
+  }
+  pixels_buffer = null; //tell gc to remove pixel buffer
+  return outputTexture;
+}
 
 function loadTextureRGB(gl, url_0, url_1, url_2, callback) {
   const texture = gl.createTexture();
@@ -140,7 +207,6 @@ function loadTextureRGB(gl, url_0, url_1, url_2, callback) {
       data_combined[i+2] = data_2[i];
       data_combined[i+3] = 0;
     }
-
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
                   image_0.width, image_0.height, i,

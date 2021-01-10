@@ -55,6 +55,7 @@ $( document ).ready(function() {
   webglCanvas.addEventListener( 'webglcontextrestored', onContextRestored, false );
 
   var canvasClip = document.getElementById("canvas-clip");
+  canvasClip.style.display = "none";
 
   function initWebGL (preserveDrawingBuffer) {
     console.log("init");
@@ -82,11 +83,33 @@ $( document ).ready(function() {
 
     window.addEventListener("resize", onResize, false);
     onResize();
+
     scene = new Scene(gl, GETscene, webglCanvas.width / 2, webglCanvas.height);
+    window.requestAnimationFrame(onCheckingStatusBar);
 
-    window.requestAnimationFrame(onAnimationFrame);
   }
+  function onCheckingStatusBar(){
+    if(!scene.ready){
+      window.requestAnimationFrame(onCheckingStatusBar);
+      $("#percmsg").html(scene.textureLoadedCount + " out of " + scene.textureTotalCount);
+      $("#pbar").css("width", 200 * (scene.textureLoadedCount / scene.textureTotalCount) + "px");
+    }else{
+      $("#msg").hide();
+      //display VR button
+      if (vrDisplay.capabilities.canPresent)
+      vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "css/google-cardboard.png", onVRRequestPresent);
 
+      // For the benefit of automated testing. Safe to ignore.
+      if (vrDisplay.capabilities.canPresent && WGLUUrl.getBool('canvasClickPresents', false))
+        webglCanvas.addEventListener("click", onVRRequestPresent, false);
+
+      window.addEventListener('vrdisplaypresentchange', onVRPresentChange, false);
+      window.addEventListener('vrdisplayactivate', onVRRequestPresent, false);
+      window.addEventListener('vrdisplaydeactivate', onVRExitPresent, false);
+
+      window.requestAnimationFrame(onAnimationFrame);
+    }
+  }
   function resetPose() {
     preGL = mat4.create();
     mat4.translate(preGL, preGL, [0, 0.0, -0.5]); 
@@ -131,7 +154,7 @@ $( document ).ready(function() {
     if (vrDisplay.isPresenting) {
       if (vrDisplay.capabilities.hasExternalDisplay) {
         VRSamplesUtil.removeButton(vrPresentButton);
-        vrPresentButton = VRSamplesUtil.addButton("Exit VR", "E", "media/icons/cardboard64.png", onVRExitPresent);
+        vrPresentButton = VRSamplesUtil.addButton("Exit VR", "E", "css/baseline_cancel_presentation_white_24dp.png", onVRExitPresent);
         canvasClip.classList.add("presenting");
 
         // Set the size to half the width and height of the eye's render
@@ -144,7 +167,7 @@ $( document ).ready(function() {
     } else {
       if (vrDisplay.capabilities.hasExternalDisplay) {
         VRSamplesUtil.removeButton(vrPresentButton);
-        vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "media/icons/cardboard64.png", onVRRequestPresent);
+        vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "css/google-cardboard.png", onVRRequestPresent);
 
         // Reset the div to it's default size when we're done presenting.
         canvasClip.classList.remove("presenting");
@@ -159,35 +182,26 @@ $( document ).ready(function() {
 
   if (navigator.getVRDisplays) {
     frameData = new VRFrameData();
-
     navigator.getVRDisplays().then(function (displays) {
       if (displays.length > 0) {
         vrDisplay = displays[displays.length - 1];
-
-        if (vrDisplay.capabilities.canPresent)
-          vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "media/icons/cardboard64.png", onVRRequestPresent);
-
-        // For the benefit of automated testing. Safe to ignore.
-        if (vrDisplay.capabilities.canPresent && WGLUUrl.getBool('canvasClickPresents', false))
-          webglCanvas.addEventListener("click", onVRRequestPresent, false);
-
-        window.addEventListener('vrdisplaypresentchange', onVRPresentChange, false);
-        window.addEventListener('vrdisplayactivate', onVRRequestPresent, false);
-        window.addEventListener('vrdisplaydeactivate', onVRExitPresent, false);
-
         initWebGL(vrDisplay.capabilities.hasExternalDisplay);
       } else {
-        initWebGL(false);
+        //initWebGL(false);
+        $("#msg").hide();
         VRSamplesUtil.addInfo("WebVR supported, but no VRDisplays found.", 3000);
       }
     }, function () {
+      $("#msg").hide();
       VRSamplesUtil.addError("Your browser does not support WebVR. See <a href='http://webvr.info'>webvr.info</a> for assistance.");
     });
   } else if (navigator.getVRDevices) {
-    initWebGL(false);
+    //initWebGL(false);
+    $("#msg").hide();
     VRSamplesUtil.addError("Your browser supports WebVR but not the latest version. See <a href='http://webvr.info'>webvr.info</a> for more info.");
   } else {
-    initWebGL(false);
+    //initWebGL(false);
+    $("#msg").hide();
     VRSamplesUtil.addError("Your browser does not support WebVR. See <a href='http://webvr.info'>webvr.info</a> for assistance.");
   }
 
@@ -386,9 +400,10 @@ $( document ).ready(function() {
 
       if (vrDisplay.isPresenting) {
         scene.drawScene(currentPose, frameData.leftProjectionMatrix, frameData.leftViewMatrix, 0, 0, webglCanvas.width * 0.5, webglCanvas.height, true, 0, false);
-        scene.drawScene(currentPose, frameData.rightProjectionMatrix, frameData.rightViewMatrix, webglCanvas.width * 0.5, 0, webglCanvas.width * 0.5, webglCanvas.height, false, 0, true);
-
+        var fb = scene.drawScene(currentPose, frameData.rightProjectionMatrix, frameData.rightViewMatrix, webglCanvas.width * 0.5, 0, webglCanvas.width * 0.5, webglCanvas.height, false, 0, true);
         vrDisplay.submitFrame();
+        //scene.drawScene(currentPose, frameData.leftProjectionMatrix, frameData.leftViewMatrix, 0, 0, webglCanvas.width * 0.5, webglCanvas.height, true, 0, false);
+      
       } else {
 
         var modelViewMatrix = mat4.create();
@@ -399,7 +414,7 @@ $( document ).ready(function() {
 
         mat4.perspective(projectionMat, Math.PI*0.4, webglCanvas.width/2 / webglCanvas.height, 0.1, 1024.0);
 
-        scene.drawScene(modelViewMatrix, null, projectionMat, null, webglCanvas.width*0.25, 0, webglCanvas.width*0.5, webglCanvas.height, 0);
+        //scene.drawScene(modelViewMatrix, null, projectionMat, null, webglCanvas.width*0.25, 0, webglCanvas.width*0.5, webglCanvas.height, 0);
         //stats.renderOrtho();
       }
     } else {

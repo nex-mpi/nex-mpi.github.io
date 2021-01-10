@@ -67,7 +67,6 @@ class Scene {
       this.vivew = w;
       this.viveh = h;
     }
-
     this.initSceneContext();
   }
 
@@ -186,8 +185,15 @@ class Scene {
     this.textureLoadedCount ++;
     console.log(url + " loaded");
     this.checkReady();
-	  if(this.ready && this.onReady){
-		  this.onReady();
+	  if(this.ready){
+      var gl = this.gl;
+      var h = this.viveh;
+      var w = this.vivew;
+      var offset = this.offset;
+      this.texture_basis = this.texture_basis.map(function(textures){
+        return textureBasis8to6(gl, textures, (h + offset * 2) * Math.ceil(layers / maxcol), (w + offset * 2) * maxcol);
+      });
+      if(this.onReady) this.onReady();
 	  }
   }
 
@@ -205,7 +211,7 @@ class Scene {
     var rn = Math.random();
     rn = 0;
 
-    this.textureTotalCount = 8 + 2 + 1; // TODO: don't hard-code
+    this.textureTotalCount = 8 + 2 + 1 + 1; // TODO: don't hard-code
     for (var i = 0; i < this.nMpis; i++) {
       texture_a.push(loadTextureRGB(gl, 
         this.GETscene + '/alpha' + names[i] + '_0.jpg?r=' + rn, 
@@ -214,15 +220,19 @@ class Scene {
         this.textureLoadedCallBack.bind(this)
       ));
 
-      texture_b.push(loadTexture(gl, this.GETscene + '/mpi' + names[i] + '_b.png?r=' + rn, this.textureLoadedCallBack.bind(this)));
+      texture_b.push([
+        loadTexture(gl, this.GETscene + '/mpi' + names[i] + '_b_1.png?r=' + rn, this.textureLoadedCallBack.bind(this)),
+        loadTexture(gl, this.GETscene + '/mpi' + names[i] + '_b_2.png?r=' + rn, this.textureLoadedCallBack.bind(this))
+      ]);
       texture_c.push(loadTexture(gl, this.GETscene + '/mpi' + names[i] + '_c.jpg?r=' + rn, this.textureLoadedCallBack.bind(this)));
 
       var basis = [];
+
       for (var j = 0; j < 8; j++) {
         basis.push(loadTexture(gl, this.GETscene + '/basis_' + (j+1).toString() + '.jpg?r=' + rn, this.textureLoadedCallBack.bind(this), gl.NEAREST));
-      } 
+      }      
       texture_basis.push(basis);
-
+      
       var realThis = this;
 
       if (extrinsics[i].length == 16) {
@@ -252,7 +262,7 @@ class Scene {
 
     in vec4 aVertexPosition;
     in vec2 aTextureCoord_c;
-    in vec2 aTextureCoord_a;
+    in vec3 aTextureCoord_a;
 
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
@@ -261,10 +271,14 @@ class Scene {
     out highp vec2 vTextureCoord_a;
     out highp vec3 vertexPos;
 
+    flat out int alpha_texture_channel;
+
+
     void main(void) {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
       vTextureCoord_c = aTextureCoord_c;
-      vTextureCoord_a = aTextureCoord_a;
+      vTextureCoord_a = aTextureCoord_a.xy;
+      alpha_texture_channel = int(aTextureCoord_a.z);
       vertexPos = aVertexPosition.xyz;
     }
   `;
@@ -278,9 +292,9 @@ class Scene {
       in highp vec2 vTextureCoord_a;
       in highp vec3 vertexPos;
 
-
       uniform sampler2D uColor;
-      uniform sampler2D uBasis;
+      uniform sampler2D uMpiB0;
+      uniform sampler2D uMpiB1;
       uniform sampler2D uAlpha;
       uniform sampler2D uBasis0;
       uniform sampler2D uBasis1;
@@ -288,24 +302,30 @@ class Scene {
       uniform sampler2D uBasis3;
       uniform sampler2D uBasis4;
       uniform sampler2D uBasis5;
-      uniform sampler2D uBasis6;
-      uniform sampler2D uBasis7;
 
       uniform vec3 cameraPos;
 
-      uniform int alpha_texture_channel;
+      flat in int alpha_texture_channel;
       uniform int pivot;
+      uniform float thresAlpha;
+      uniform float thresBasis;
       out vec4 fragmentColor;
 
       void main(void) {
         vec4 va = texture(uAlpha, vTextureCoord_a);
         float alpha = va[alpha_texture_channel];
+        // prune alpha if lower than threshold.
+        if(alpha < thresAlpha){
+          fragmentColor = vec4(0.0, 0.0, 0.0, 0.0);
+          return ;
+        }
         if (pivot != 0) {
           fragmentColor = vec4(1.0, 0.0, 0.0, alpha);
           return ;
         }
+        // disable basis if alpha is too low.
         vec4 vc = texture(uColor, vTextureCoord_c); 
-        if (alpha > 0.05) {
+        if (alpha > thresBasis) {
           vec3 view = normalize(vertexPos.xyz - cameraPos);
           float tx = view.x;
           float ty = view.y;
@@ -316,30 +336,42 @@ class Scene {
           vec2 loc = clamp(vec2(tx / rangex, ty / rangey) * 0.5 + 0.5, 0.0, 1.0); // range = 0 - 1;
 
           const float basis_width = 400.0;
-          const float basis_n = 8.0;
 
-          loc.x = loc.x * (basis_width - 1.0) / (basis_n * basis_width) + 0.5 / (basis_n * basis_width);
+          loc.x = loc.x * (basis_width - 1.0) / basis_width + 0.5 / basis_width;
           loc.y = loc.y * (basis_width - 1.0) / basis_width + 0.5 / basis_width;
 
-          vec2 shift = vec2(1.0 / basis_n, 0);
+          vec4 _b0 = texture(uMpiB0, loc) * 2.0 - 1.0;
+          vec4 _b1 = texture(uMpiB1, loc) * 2.0 - 1.0;
 
-          vec4 b0 = texture(uBasis, loc              ) * 2.0 - 1.0;
-          vec4 b1 = texture(uBasis, loc + shift      ) * 2.0 - 1.0;
-          vec4 b2 = texture(uBasis, loc + shift * 2.0) * 2.0 - 1.0;
-          vec4 b3 = texture(uBasis, loc + shift * 3.0) * 2.0 - 1.0;
-          vec4 b4 = texture(uBasis, loc + shift * 4.0) * 2.0 - 1.0;
-          vec4 b5 = texture(uBasis, loc + shift * 5.0) * 2.0 - 1.0;
-          vec4 b6 = texture(uBasis, loc + shift * 6.0) * 2.0 - 1.0;
-          vec4 b7 = texture(uBasis, loc + shift * 7.0) * 2.0 - 1.0;
-
-          vec4 v0 = texture(uBasis0, vTextureCoord_c) * 2.0 - 1.0;
-          vec4 v1 = texture(uBasis1, vTextureCoord_c) * 2.0 - 1.0;
-          vec4 v2 = texture(uBasis2, vTextureCoord_c) * 2.0 - 1.0;
-          vec4 v3 = texture(uBasis3, vTextureCoord_c) * 2.0 - 1.0;
-          vec4 v4 = texture(uBasis4, vTextureCoord_c) * 2.0 - 1.0;
-          vec4 v5 = texture(uBasis5, vTextureCoord_c) * 2.0 - 1.0;
-          vec4 v6 = texture(uBasis6, vTextureCoord_c) * 2.0 - 1.0;
-          vec4 v7 = texture(uBasis7, vTextureCoord_c) * 2.0 - 1.0;
+          float b0 = _b0.x;
+          float b1 = _b0.y;
+          float b2 = _b0.z;
+          float b3 = _b0.w;
+          float b4 = _b1.x;
+          float b5 = _b1.y;
+          float b6 = _b1.z;
+          float b7 = _b1.w;
+          
+          vec4 _v0 = texture(uBasis0, vTextureCoord_c) * 2.0 - 1.0;
+          vec4 _v1 = texture(uBasis1, vTextureCoord_c) * 2.0 - 1.0;
+          vec4 _v2 = texture(uBasis2, vTextureCoord_c) * 2.0 - 1.0;
+          vec4 _v3 = texture(uBasis3, vTextureCoord_c) * 2.0 - 1.0;
+          vec4 _v4 = texture(uBasis4, vTextureCoord_c) * 2.0 - 1.0;
+          vec4 _v5 = texture(uBasis5, vTextureCoord_c) * 2.0 - 1.0;          
+          
+          vec4 v0, v1, v2, v3, v4, v5, v6, v7;
+          v0.xyz = _v0.xyz;
+          v1.x = _v0.w;
+          v1.yz = _v1.xy;
+          v2.xy = _v1.zw;
+          v2.z = _v2.x;
+          v3.xyz = _v2.yzw;
+          v4.xyz = _v3.xyz;
+          v5.x = _v3.w;
+          v5.yz = _v4.xy;
+          v6.xy = _v4.zw;
+          v6.z = _v5.x;
+          v7.xyz = _v5.yzw; 
 
           fragmentColor = vc
               + v0 * b0
@@ -354,7 +386,7 @@ class Scene {
         } else {
           fragmentColor = vc;
         }
-        fragmentColor.a = alpha;            
+        fragmentColor.a = alpha;
       }
     `;
 
@@ -365,6 +397,7 @@ class Scene {
         vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
         textureCoord_a: gl.getAttribLocation(shaderProgram, 'aTextureCoord_a'),
         textureCoord_c: gl.getAttribLocation(shaderProgram, 'aTextureCoord_c'),
+        alphaPicker: gl.getAttribLocation(shaderProgram, 'aAlphaPicker'),
       },
       uniformLocations: {
         projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
@@ -372,7 +405,8 @@ class Scene {
         cameraPos: gl.getUniformLocation(shaderProgram, 'cameraPos'),
 
         uColor: gl.getUniformLocation(shaderProgram, 'uColor'),
-        uBasis: gl.getUniformLocation(shaderProgram, 'uBasis'),
+        uMpiB0: gl.getUniformLocation(shaderProgram, 'uMpiB0'),
+        uMpiB1: gl.getUniformLocation(shaderProgram, 'uMpiB1'),
         uAlpha: gl.getUniformLocation(shaderProgram, 'uAlpha'),
         uBasis0: gl.getUniformLocation(shaderProgram, 'uBasis0'),
         uBasis1: gl.getUniformLocation(shaderProgram, 'uBasis1'),
@@ -380,17 +414,12 @@ class Scene {
         uBasis3: gl.getUniformLocation(shaderProgram, 'uBasis3'),
         uBasis4: gl.getUniformLocation(shaderProgram, 'uBasis4'),
         uBasis5: gl.getUniformLocation(shaderProgram, 'uBasis5'),
-        uBasis6: gl.getUniformLocation(shaderProgram, 'uBasis6'),
-        uBasis7: gl.getUniformLocation(shaderProgram, 'uBasis7'),
         alpha_texture_channel: gl.getUniformLocation(shaderProgram, 'alpha_texture_channel'),
         pivot: gl.getUniformLocation(shaderProgram, 'pivot'),
+        thresAlpha: gl.getUniformLocation(shaderProgram, 'thresAlpha'),
+        thresBasis: gl.getUniformLocation(shaderProgram, 'thresBasis')
       },
     };
-
-
-    const positionBuffer = gl.createBuffer();
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     
     var o2 = 2 * this.offset;
     var o = this.offset;
@@ -402,69 +431,117 @@ class Scene {
     );
 
     mat4.invert(sfmProjectionMatrix, sfmProjectionMatrix);
-    const positionsTmp = [
-      -1, 1,  1,
-      1,  1,  1, 
-      1,  -1,  1,
-      -1,  -1,  1,
-    ];
-    var positions = [];
-    for (var i = 0; i < this.nPlanes; i++) {
-    //for (var i = this.nPlanes - 1; i >= 0; i--) {
-      for (var j = 0 ; j < 4; j++) {
-        let scale = planes[0][i];
-        let v = vec4.fromValues( 
-            positionsTmp[j*3+0] * scale,
-            positionsTmp[j*3+1] * scale,
-            positionsTmp[j*3+2] * scale,
-            1);
-        let trans = vec4.create(); 
-        vec4.transformMat4(trans, v, sfmProjectionMatrix);
-        positions.push(trans[0]);
-        positions.push(trans[1]);
-        positions.push(trans[2]);
-        positions.push(trans[3]);
-      }
-    }
-
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-    var coords_c = [];
-    var coords_a = [];
-    var mcol;
-    if (typeof maxcol == 'undefined' || maxcol == 0) 
-      mcol = this.nPlanes;
-    else
-      mcol = maxcol;
-
+    
+    var mcol = (typeof maxcol == 'undefined' || maxcol == 0) ? this.nPlanes : maxcol;  
     var mrow = Math.ceil(this.nPlanes / 3 / mcol); 
 
-    for (var i = 0; i < this.nPlanes; i++) {
-      var ii = i - this.channel_starts[this.channel_indices[i]];
-
-      var i0 = 1.0 * (ii % mcol) / mcol;
-      var i1 = 1.0 * (ii % mcol + 1) / mcol;
-
-      var j0 = 1.0 * Math.floor(ii / mcol) / mrow;
-      var j1 = 1.0 * (Math.floor(ii / mcol) + 1) / mrow;
-      coords_a = coords_a.concat([
-        i0, j1,
-        i1, j1,
-        i1, j0,
-        i0, j0,
-      ]);
-    }
-
-    for (var i = 0; i < layers; i++) {
-      var i0 = 1.0 * (i % mcol) / mcol;
-      var i1 = 1.0 * (i % mcol + 1) / mcol;
-
-      var j0 = 1.0 * Math.floor(i / mcol) / Math.ceil(layers / mcol);
-      var j1 = 1.0 * (Math.floor(i / mcol) + 1) / Math.ceil(layers / mcol);
-      for (var j = 0; j < sublayers; j++) {
-        coords_c = coords_c.concat([ i0, j1, i1, j1, i1, j0, i0, j0]);
+    // variable that we have to make a pass to shader 
+    var positions = []
+    var coords_c = [];
+    var coords_a = [];
+    var indices = [];
+    
+    var alpha_h = parseFloat(this.viveh + (this.offset*2));
+    var alpha_w = parseFloat(this.vivew + (this.offset*2));
+    var bounds;
+    if (typeof quadtree !== 'undefined') {
+      bounds = quadtree['bound'];
+    }else{
+      bounds = [];
+      for(var i = 0; i < this.nPlanes; i++){
+        bounds.push([[0,0,alpha_h,alpha_w]]);
       }
     }
+  
+    this.plane_vertices_qs = [];
+    var sum_plane_vertices = 0;
+    var vertices_counter = 0;
+
+    for(var i = 0; i < this.nPlanes; i++){  
+      sum_plane_vertices += bounds[i].length * 6;
+      this.plane_vertices_qs.push(sum_plane_vertices);
+    }
+    for (var i = this.nPlanes -1; i >= 0; i--) { //render from back to front 
+      var lookup = {}
+      var scale = planes[0][i];
+      
+      var ii = i - this.channel_starts[this.channel_indices[i]];
+      var alpha_i0 = 1.0 * (ii % mcol) / mcol;
+      var alpha_i1 = 1.0 * (ii % mcol + 1) / mcol;      
+      var alpha_j0 = 1.0 * Math.floor(ii / mcol) / mrow;
+      var alpha_j1 = 1.0 * (Math.floor(ii / mcol) + 1) / mrow;
+      var alpha_texture_channel = this.channel_indices[i];
+
+      var layer_id = parseInt(Math.floor(i / sublayers));
+      var color_i0 = 1.0 * (layer_id % mcol) / mcol;
+      var color_i1 = 1.0 * (layer_id % mcol + 1) / mcol;
+      var color_j0 = 1.0 * Math.floor(layer_id / mcol) / Math.ceil(layers / mcol);
+      var color_j1 = 1.0 * (Math.floor(layer_id / mcol) + 1) / Math.ceil(layers / mcol);
+      
+
+      for (var j = 0 ; j < bounds[i].length; j++) {
+        var bound = bounds[i][j];
+        var top = parseFloat(bound[0]) / alpha_h * 2.0 - 1.0;
+        var left = parseFloat(bound[1]) / alpha_w * 2.0 - 1.0;
+        var bottom = parseFloat(bound[2]) / alpha_h * 2.0 - 1.0;
+        var right = parseFloat(bound[3]) / alpha_w * 2.0 - 1.0;
+        
+        var positionsTmp = [
+          top, left, 1,
+          bottom, left, 1,
+          top, right, 1,
+          bottom, right, 1,
+        ]
+        // indice - avoid crash on none-exist lookup table
+        if(!lookup[top]) lookup[top] = {};
+        if(!lookup[bottom]) lookup[bottom] = {};
+        for( var k = 0; k < 4; k++){ // for each vertex
+          if(lookup[positionsTmp[k*3+0]][positionsTmp[k*3+1]]) continue;  
+          // calculate vertex position on actual 3d location
+          var v = vec4.fromValues( 
+            positionsTmp[k*3+0] * scale,
+            positionsTmp[k*3+1] * scale,
+            positionsTmp[k*3+2] * scale,
+            1
+          );
+          var trans = vec4.create(); 
+          vec4.transformMat4(trans, v, sfmProjectionMatrix);
+          positions.push(trans[0]);
+          positions.push(trans[1]);
+          positions.push(trans[2]);
+          positions.push(trans[3]);
+          // alpha chanel          
+          coords_a.push(((positionsTmp[k*3+0] + 1) / 2) * (alpha_i1 - alpha_i0) + alpha_i0);
+          coords_a.push(((positionsTmp[k*3+1] + 1) / 2) * (alpha_j1 - alpha_j0) + alpha_j0);
+          coords_a.push(alpha_texture_channel);
+          // color channel lookup
+          coords_c.push(((positionsTmp[k*3+0] + 1) / 2) * (color_i1 - color_i0) + color_i0);
+          coords_c.push(((positionsTmp[k*3+1] + 1) / 2) * (color_j1 - color_j0) + color_j0);         
+        }
+        // indices - prepare lookup table
+        var do_lookup = function(y,x){
+          var vertices_id = lookup[y][x];
+          if(!vertices_id){
+            lookup[y][x] = vertices_counter;
+            vertices_id = vertices_counter;
+            vertices_counter++; 
+          }
+          return vertices_id;
+        }
+        // indices
+        indices.push(do_lookup(top, left)); 
+        indices.push(do_lookup(bottom,left));
+        indices.push(do_lookup(top,right)); 
+        indices.push(do_lookup(top,right)); 
+        indices.push(do_lookup(bottom,left));
+        indices.push(do_lookup(bottom,right));        
+      }
+      lookup = null; //tell gc to clear lookup table
+    }
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
     const textureCoord_c = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, textureCoord_c);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(coords_c), gl.STATIC_DRAW);
@@ -473,41 +550,24 @@ class Scene {
     gl.bindBuffer(gl.ARRAY_BUFFER, textureCoord_a);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(coords_a), gl.STATIC_DRAW);
 
-
-    const textureUnitBuff = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, textureUnitBuff);
-    var tc = [
-      0, 1,
-      1, 1,
-      1, 0,
-      0, 0,
-    ];
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tc), gl.STATIC_DRAW);
-
     const indexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-    const indicesTmp = [0, 1, 3, 2];
-    var indices = [];
-    for (var i = 0; i < this.nPlanes; i++) {
-      for (var j = 0; j < 4; j++) {
-        indices.push(indicesTmp[j] + 4 * i);
-      }
-    }
-
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
-      new Uint16Array(indices), gl.STATIC_DRAW);
+      new Uint32Array(indices), gl.STATIC_DRAW);
 
     if (typeof delaunay !== 'undefined' && delaunay) {
       this.delaunay = true;
       this.initBlend();
     } 
 
+    this.thres_alpha =  (typeof thres_alpha !== 'undefined') ? thres_alpha : 0.0;
+    this.thres_basis =  (typeof thres_basis !== 'undefined') ? thres_basis : 0.0;
+
     this.gl = gl;
     this.position = positionBuffer;
     this.textureCoord_c = textureCoord_c;
     this.textureCoord_a = textureCoord_a;
-    this.textureCoordUnit = textureUnitBuff;
     this.indices = indexBuffer;
     this.programInfo = programInfo;
     this.texture_a = texture_a;
@@ -527,6 +587,7 @@ class Scene {
     gl.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix);
     gl.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix);
 
+    
     gl.uniform1i(programInfo.uniformLocations.uColor, 0);
     gl.uniform1i(programInfo.uniformLocations.uAlpha, 1);
     gl.uniform1i(programInfo.uniformLocations.uBasis0, 2);
@@ -535,11 +596,12 @@ class Scene {
     gl.uniform1i(programInfo.uniformLocations.uBasis3, 5);
     gl.uniform1i(programInfo.uniformLocations.uBasis4, 6);
     gl.uniform1i(programInfo.uniformLocations.uBasis5, 7);
-    gl.uniform1i(programInfo.uniformLocations.uBasis6, 8);
-    gl.uniform1i(programInfo.uniformLocations.uBasis7, 9);
-    gl.uniform1i(programInfo.uniformLocations.uBasis, 10);
+    gl.uniform1i(programInfo.uniformLocations.uMpiB0, 8);
+    gl.uniform1i(programInfo.uniformLocations.uMpiB1, 9);
 
+    
     gl.uniform3fv(programInfo.uniformLocations.cameraPos, cameraPos);
+    
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.position);
     gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, 4, gl.FLOAT, false, 0, 0);
@@ -550,43 +612,62 @@ class Scene {
     gl.enableVertexAttribArray(programInfo.attribLocations.textureCoord_c);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.textureCoord_a);
-    gl.vertexAttribPointer(programInfo.attribLocations.textureCoord_a, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(programInfo.attribLocations.textureCoord_a, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(programInfo.attribLocations.textureCoord_a);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indices);
-
+    
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb);
     gl.disable(gl.DEPTH_TEST);           
-
+    
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this.texture_c[0]);
 
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, this.texture_a[0]);
 
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < 6; i++) {
       gl.activeTexture(gl.TEXTURE2 + i);
       gl.bindTexture(gl.TEXTURE_2D, this.texture_basis[0][i]);
     }
-    gl.activeTexture(gl.TEXTURE10);
-    gl.bindTexture(gl.TEXTURE_2D, this.texture_b[0]); // basis
-
+    gl.activeTexture(gl.TEXTURE8);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture_b[0][0]); // basis
+    gl.activeTexture(gl.TEXTURE9);
+    gl.bindTexture(gl.TEXTURE_2D, this.texture_b[0][1]); // basis
+    
     gl.enable( gl.BLEND );
     gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA );
+
+    gl.uniform1f(programInfo.uniformLocations.thresAlpha, this.thres_alpha);
+    gl.uniform1f(programInfo.uniformLocations.thresBasis, this.thres_basis);
   }
 
   drawPlanes(start, end) {
+  
     const gl = this.gl;
     const programInfo = this.programInfo;
-    for (var i = start; i < end; i++) {
-      gl.uniform1i(programInfo.uniformLocations.alpha_texture_channel,
-        this.channel_indices[this.nPlanes - 1 - i]);
-      gl.uniform1i(programInfo.uniformLocations.pivot,
-        this.nPlanes - 1 - i == pivoting);
+    
+    if(pivoting == -1 || (pivoting < start || pivoting > end) ){
+      var firstRender = start == 0 ? 0 : this.plane_vertices_qs[start - 1]; 
+      const offset = this.plane_vertices_qs[this.nPlanes - 1] - this.plane_vertices_qs[end - 1];
+      const vertexCount = this.plane_vertices_qs[end - 1]  - firstRender;  
+      gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_INT, offset * 4);
+    }else{
+      var offset, vertexCount;
+      offset = this.plane_vertices_qs[this.nPlanes - 1] - this.plane_vertices_qs[end];
+      vertexCount = this.plane_vertices_qs[end - 1]  - (pivoting > 0 ? this.plane_vertices_qs[pivoting-1] : 0);  
+      gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_INT, offset * 4);
 
-      const vertexCount = 4;
-      gl.drawElements(gl.TRIANGLE_STRIP, vertexCount, gl.UNSIGNED_SHORT,
-        2 * vertexCount * (this.nPlanes-1-i));
+      gl.uniform1i(programInfo.uniformLocations.pivot, 1);
+      offset = this.plane_vertices_qs[this.nPlanes - 1] - this.plane_vertices_qs[pivoting];
+      vertexCount = this.plane_vertices_qs[pivoting]  - (pivoting > 0 ? this.plane_vertices_qs[pivoting-1] : 0);  
+      gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_INT, offset * 4);
+      
+      gl.uniform1i(programInfo.uniformLocations.pivot, 0);
+      offset = this.plane_vertices_qs[this.nPlanes - 1] - this.plane_vertices_qs[pivoting-1];
+      vertexCount = this.plane_vertices_qs[pivoting-1] - this.plane_vertices_qs[start];  
+      gl.drawElements(gl.TRIANGLES, vertexCount, gl.UNSIGNED_INT, offset * 4);
+
     }
   }
 
@@ -642,10 +723,9 @@ class Scene {
     var start = 0;
     var end = this.nPlanes;
     if (firstPlane != -1)
-      end = this.nPlanes - firstPlane;
+      end =  lastPlane;
     if (lastPlane != -1)
-      start = this.nPlanes - 1 - lastPlane;
-
+      start = firstPlane;
     const mvi = this.mvi[0];
 
     gl.viewport(cx, cy, cw, ch);

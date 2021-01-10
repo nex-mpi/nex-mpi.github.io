@@ -4,78 +4,101 @@
     <meta charset="utf-8">
     <title>NeX Renderer</title>
     <link rel="stylesheet" href="css/jquery-ui.min.css?u=1" type="text/css">
-    <link rel="stylesheet" href="css/webgl.css?u=1" type="text/css">
-    <link rel="icon" href="../assets/images/icon_32x32.png" type="image/png" sizes="32x32">
-  <style>
-  </style>
+    <link rel="stylesheet" href="css/rightui.css?u=3" type="text/css">
+    <link rel="stylesheet" href="css/rangeslider.css" type="text/css">
+    <style>
+    </style>
   </head>
 
   <body>
-    <div id="canvas-clip">
-      <canvas id="webgl-canvas"></canvas>
-    </div>
-    <canvas id="glcanvas"></canvas>
-    <canvas id="texturecanvas" style="display:none"></canvas>
-    <div class="info">
-      <span id="fps"></span>
-      <b>Scene</b>: <span id="scenename"></span>
-      <div class="ss" id="rendered_planes_text">
-        <span class="desc">Rendered Planes:</span>
-        <span id="amount"></span>
-        <div id="rendered_planes"></div>
+    <div id="main">
+      <div id="viewer">
+        <div id="msg">
+          Loading textures:<br>
+          <div class="pbarouter">
+            <div class="pbarinner" id="pbar">
+              <div id="percmsg" style="width: 200px; z-index:100">Starting...</div>
+            </div>
+          </div>
+        </div>
+        <table>
+          <tr><td>
+              <div id="canvas-clip">
+                <canvas id="webgl-canvas"></canvas>
+              </div>
+              <canvas id="glcanvas"></canvas>
+            </td>
+            <td>
+              <div class="rangeslider" style="display:none" id="s1">
+                <div class="top endpoint"><div class="uplabel label"></div></div>
+                <div class="bottom endpoint"><div class="downlabel label"></div></div>
+                <div class="mid"></div>
+                <div class="pivot"><div id="tip">Rotation Pivot</div></div>
+              </div>
+            </td></tr>
+        </table>
+        <div id="canvastmp"></div>
       </div>
-
-      <div class="ss" id="show_plane_text">
-        <span class="desc">Show Plane:</span>
-        <span id="plane">0</span>
-        <div id="show_plane"></div>
+      <br>
+      <div class="info" style="display:none">
+        <table>
+          <tr class="trheader">
+            <td>
+              Auto Motion
+            </td>
+            <td>
+              Speed
+            </td>
+            <td>
+              Radius
+            </td>
+            <td>
+              Zoom Type
+            </td>
+            <td style="width: 120px"  rowspan="2">
+              <span id="fps"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <select id="motion-selector">
+                <option value="motion_none" selected>None</option>
+                <option value="motion_spiral_zoom">Spiral</option>
+                <option value="motion_spiral">Spin</option>
+                <option value="motion_horizontal">Horizontal</option>
+                <option value="motion_vertical">Vertical</option>
+                <option value="motion_mix">Dolly-Spin</option>
+              </select> 
+            </td>
+            <td>
+              <div class="sliding_disabled" id="spin_speed_text">
+                <span id="speed" style="display:none">15</span>
+                <div id="spin_speed"></div>
+              </div>
+            </td>
+            <td>
+              <div class="sliding_disabled" id="spin_radius_text">
+                <span id="radius" style="display:none">30</span>
+                <div id="spin_radius"></div>
+              </div>
+            </td>
+            <td>
+              <div class="rradio" id="zoom-selector">
+                <input class="checkbox-tools" type="radio" name="zoom" id="zoom_normal" value="zoom_normal" checked>
+                <label class="for-checkbox-tools" for="zoom_normal">Normal</label>
+                <input class="checkbox-tools" type="radio" name="zoom" id="zoom_dolly" value="zoom_dolly">
+                <label class="for-checkbox-tools" for="zoom_dolly">Dolly</label>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <span style="font-size: 12px; color: #666666;">Drag mouse to rotate.&nbsp;&nbsp;Shift-drag to translate.&nbsp;&nbsp;Scroll to zoom.&nbsp;&nbsp;Space bar to reset view.</span>
+        <!--<b>Scene</b>: <span id="scenename"></span>-->
       </div>
-
-      <div class="ss" id="rotation_plane_text">
-        <span class="desc">Pivot Plane:</span>
-        <span id="center">0</span>
-        <div id="rotation_plane"></div>
-      </div>
-
-      <div class="ss rradio" id="zoom-selector">
-        <span class="desc" style="margin-right: 270px">Zoom Type: </span>
-        <input class="checkbox-tools" type="radio" name="zoom" id="zoom_normal" value="zoom_normal" checked>
-        <label class="for-checkbox-tools" for="zoom_normal">Normal</label>
-        <input class="checkbox-tools" type="radio" name="zoom" id="zoom_dolly" value="zoom_dolly">
-        <label class="for-checkbox-tools" for="zoom_dolly">Dolly</label>
-      </div>
-
-      <span class="section">Auto-Motion</span>
-
-      <div id="motion-selector" class="rradio">
-        <span class="desc" style="margin-right: 85px">Motion Type: </span>
-        <input class="checkbox-tools" type="radio" name="motion" id="motion_none" value="motion_none">
-        <label class="for-checkbox-tools" for="motion_none">None</label>
-        <input class="checkbox-tools" type="radio" name="motion" id="motion_mix" value="motion_mix">
-        <label class="for-checkbox-tools" for="motion_mix">Mix</label>
-        <input class="checkbox-tools" type="radio" name="motion" id="motion_spiral" value="motion_spiral">
-        <label class="for-checkbox-tools" for="motion_spiral">Spiral</label>
-        <input class="checkbox-tools" type="radio" name="motion" id="motion_spiral_zoom" value="motion_spiral_zoom" checked>
-        <label class="for-checkbox-tools" for="motion_spiral_zoom">Spiral-Zoom</label>
-        <input class="checkbox-tools" type="radio" name="motion" id="motion_horizontal" value="motion_horizontal">
-        <label class="for-checkbox-tools" for="motion_horizontal">Horizontal</label>
-        <input class="checkbox-tools" type="radio" name="motion" id="motion_vertical" value="motion_vertical">
-        <label class="for-checkbox-tools" for="motion_vertical">Vertical</label>
-      </div>
-      <div class="ss sliding_disabled" id="spin_speed_text">
-        <span class="desc">Speed:</span>
-        <span id="speed">15</span>
-        <div id="spin_speed"></div>
-      </div>
-      <div class="ss sliding_disabled" id="spin_radius_text">
-        <span class="desc">Radius:</span>
-        <span id="radius">30</span>
-        <div id="spin_radius"></div>
-      </div>
-
     </div>
 
     <div id="workspace"></div>
+    <canvas id="texturecanvas" style="display:none"></canvas>
   </body>
   <script src="js/jquery-3.4.1.min.js"></script>
   <script src="js/jquery-ui.min.js"></script>
@@ -90,4 +113,5 @@
   <script src="js/vr-samples-util.js"></script>
   <script src="js/gl-utils.js"></script>
   <script src="js/loader2.js?u=1"></script>
+  <script src="js/rangeslider.js"></script>
 </html>

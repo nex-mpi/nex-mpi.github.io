@@ -5,7 +5,7 @@
     <title>WebGL Orbiter Renderer</title>
     <link rel="stylesheet" href="css/jquery-ui.min.css?u=1" type="text/css">
     <link rel="stylesheet" href="css/webgl.css?u=1" type="text/css">
-    <link rel="icon" href="../assets/images/icon_32x32.png" type="image/png" sizes="32x32">
+    <link rel="stylesheet" href="css/rightui.css?u=3" type="text/css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
 	#motion-selector{
@@ -43,24 +43,26 @@
 
   <body>
     <div class="center-screen">
-      <div id="canvas-clip">
+      <div id="msg">
+        Loading textures:<br>
+        <div class="pbarouter">
+          <div class="pbarinner" id="pbar">
+            <div id="percmsg" style="width: 200px; z-index:100">Starting...</div>
+          </div>
+        </div>
+      </div>
+      <div id="canvas-clip" tyle="display: none;">
         <canvas id="webgl-canvas"></canvas>
       </div>
       <canvas id="glcanvas"></canvas>
       <canvas id="texturecanvas" style="display:none"></canvas>
-      <div class="info">
-        <span id="fps"></span>
+      <div class="info" style="display: none;">
+        <!-- <span id="fps"></span> -->
         <!--<b>Scene</b>: <span id="scenename"></span>-->
         <div class="" id="rendered_planes_text">
           <span class="desc">Rendered Planes:</span>
           <span id="amount"></span>
           <div id="rendered_planes"></div>
-        </div>
-
-        <div class="" id="show_plane_text">
-          <span class="desc">Show Plane:</span>
-          <span id="plane">0</span>
-          <div id="show_plane"></div>
         </div>
 
         <div id="rotation_plane_text" >
@@ -96,7 +98,7 @@
       openFullscreen();
       window.setTimeout(function(){
         document.querySelector('.hide-on-fullscreen').style.display = 'none';
-      },50);
+      },20);
     }
     function openFullscreen() {
       let elem = document.body;
@@ -120,13 +122,5 @@
         document.querySelector('.hide-on-fullscreen').style.display = 'block';
       }
     }
-  </script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBLPBBKRZ9"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YBLPBBKRZ9');
   </script>
 </html>
