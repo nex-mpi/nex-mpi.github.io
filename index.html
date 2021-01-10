@@ -18,11 +18,25 @@
       .card .media-content .title, .card .media-content .subtitle{
         color: #4a4a4a;
       }
+      .subtitle {
+        margin-top: -0.8rem !important;
+      }
       .card-footer{
         text-align: center;
       }
       .author{
         font-size:1.2rem
+      }
+      
+      @media only screen and (min-width: 900px) {
+        .container.col-max-width{
+          max-width: 900px !important;       
+       }
+      }
+      @media only screen and (min-width: 681px) {
+        .vistec-offset{
+          top:-15px; 
+       }
       }
       @media only screen and (max-width: 600px) {
         .author{
@@ -32,14 +46,34 @@
           font-size:0.65rem
         }
       }
-      
+      .shead {
+        font-size: 1.7rem;
+        margin-bottom: 0.5em !important;
+      }
+      .sec-body {
+      }
+      .hero-body {
+        padding: 1rem 1rem 2rem 1rem;
+      }
+      .bbut {
+        background-color: #739cde;
+        color: white;
+        padding: 0.5em 0.8em;
+        border-radius: 5px;
+      }
+      .dtitle {
+        font-size: 1.1rem;
+      }
+      .bbut:hover {
+        color: white !important;
+      }
     </style>
 
   </head>
-  <body>
-    <section class="hero is-dark">
-      <div class="hero-body">
-        <div class="container" style="text-align: center;">
+  <body style="background-color: #F5F5F5;">
+    <section class="hero" style="background-color: white;">
+      <div class="hero-body" style="padding: 3rem 0 2rem 0;">
+        <div class="container" style="text-align: center; max-width: 950px;">
           <h1 class="title">
             NeX: Real-time View Synthesis with Neural Basis Expansion
           </h1>
@@ -60,7 +94,7 @@
           </div>
           <div>
           </div>
-          <div class="author">
+          <div class="author" style="font-size: 1.3rem">
             VISTEC - Vidyasirimedhi Institute of Science and Technology
           </div>
           <div class="equal-contribution"style="color:#909090">
@@ -69,20 +103,20 @@
         </div>
       </div>
     </section>
-    <section class="section" style="background-color:#171617;display : flex;align-items : center;justify-content: center;padding: 0px;">
-      <div style="max-width: 1920px;width: 1920px;">
+    <section class="section" style="display : flex; align-items : center;justify-content: center;padding: 0px;">
+      <div style="max-width:  900px;width: 900px;">
         <div style="position: relative;width: 100%;height: 0;padding-bottom: 56.25%;">
-          <iframe height="1080" width="1920" style=" position: absolute;top: 0;left: 0;width: 100%;height: 100%;max-height: 100%; max-width: 100%;" src="https://www.youtube.com/embed/d2UsFs4D-nw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe height="506.25" width="900" style=" position: absolute;top: 0;left: 0;width: 100%;height: 100%;max-height: 100%; max-width: 100%;" src="https://www.youtube.com/embed/d2UsFs4D-nw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </section>
     <section class="hero">
       <div class="hero-body">
         <div class="container" style="max-width:900px;">
-          <h1 class="title">Abstract</h1>
-          <p class="is-size-5" style="text-align: justify;">
+          <h1 class="title shead">Abstract</h1>
+          <p class="abstract" style="text-align: justify;">
                 We present NeX, a new approach to novel view synthesis based on enhancements of multiplane image (MPI) 
-                that can reproduce NeXt-level view-dependent effects---in real-time. Unlike traditional MPI that uses a set of simple RGBα planes, 
+                that can reproduce NeXt-level view-dependent effects---in real time. Unlike traditional MPI that uses a set of simple RGBα planes, 
                 our technique models view-dependent effects by instead parameterizing each pixel as a linear combination of basis functions learned from a neural network.
                 Moreover, we propose a hybrid implicit-explicit modeling strategy that improves upon fine detail and produces state-of-the-art results.
                 Our method is evaluated on benchmark forward-facing datasets as well as our newly-introduced dataset designed to test the limit of view-dependent modeling 
@@ -92,8 +126,8 @@
         </div>
       </div>
     </section> 
-    <section class="hero is-light">
-      <div class="hero-body">
+    <section class="hero">
+      <div class="sec-body">
         <div class="container is-size-5" style="text-align: center;">
           <div class="columns">
             <div class="column"></div>
@@ -123,14 +157,14 @@
       </div>
     </section>
     
-    <section class="hero is-primary" style="background-color:#00897b" >
+    <section class="hero" >
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
+        <div class="col-max-width container">
+          <h1 class="title shead">
             Real-time demos
           </h1>
-          <p class="subtitle">
-            *A high-end GPU recommened for High and VR modes.
+          <p class="subtitle" style="font-size: 1rem;">
+            *A high-end GPU recommended for High and VR modes.
           </p>
           <div class="columns is-desktop">
             <div class="column">
@@ -141,10 +175,10 @@
                     </figure>
                   </div>                  
                   <footer class="card-footer">
-                    <a href="viewer/mobile.html?scene=https://pureexe.github.io/gaint/640" class="card-footer-item">Mobile <br> (20.5 MB)</a>
-                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/800" class="card-footer-item">Low <br> (28.0 MB)</a>
-                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/1008_192" class="card-footer-item">High <br> (68.1 MB)</a>
-                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/1008_096&vr" class="card-footer-item">VR <br> (28.7 MB)</a>
+                    <a href="viewer/mobile.html?scene=https://pureexe.github.io/gaint/640" class="card-footer-item">Mobile </a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/800" class="card-footer-item">Low </a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/1008_192" class="card-footer-item">High </a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/1008_096&vr" class="card-footer-item">VR </a>
                   </footer>
                 </div>
             </div>
@@ -156,10 +190,10 @@
                   </figure>
                 </div>              
                 <footer class="card-footer">
-                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/crest/640" class="card-footer-item">Mobile <br> (18.7 MB)</a>
-                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/800" class="card-footer-item">Low <br> (25.9 MB)</a>
-                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008_192" class="card-footer-item">High <br> (63.5 MB)</a>
-                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008_096&vr" class="card-footer-item">VR <br> (21.1 MB)</a>
+                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/crest/640" class="card-footer-item">Mobile </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/800" class="card-footer-item">Low </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008_192" class="card-footer-item">High </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008_096&vr" class="card-footer-item">VR </a>
                   <!-- <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/uncompressed/1008" class="card-footer-item">Uncompressed <br> (466 MB)</a> -->
                 </footer>
               </div>
@@ -172,25 +206,25 @@
                   </figure>
                 </div>                
                 <footer class="card-footer" style="text-align: center;">
-                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/cd/640" class="card-footer-item">Mobile <br> (11.4 MB)</a>
-                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/800" class="card-footer-item">Low <br> (17.8 MB)</a>
-                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008_192" class="card-footer-item">High <br> (42.2 MB)</a>
-                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008_096&vr" class="card-footer-item">VR <br> (12.9 MB)</a>
+                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/cd/640" class="card-footer-item">Mobile</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/800" class="card-footer-item">Low </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008_192" class="card-footer-item">High </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008_096&vr" class="card-footer-item">VR</a>
                   <!-- <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/uncompress/1008" class="card-footer-item">Uncompressed <br> (307 MB)</a> -->
                 </footer>
               </div>
             </div>
           </div>
           <div style="text-align: center;width: 100%;">
-            <a href="viewer/" class="button is-danger">More demo</a>
+            <a href="viewer/" class="bbut">More demos</a>
           </div>
         </div>
       </div>
     </section>
-    <section class="hero is-dark">
+    <section class="hero" >
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
+        <div class="col-max-width container">
+          <h1 class="title shead">
             Additional results
           </h1>
           <div class="columns">
@@ -219,15 +253,15 @@
             </div>
           </div>
           <div style="text-align: center;width: 100%;">
-            <a href="result/1.html" target="_blank" class="button is-danger">More results</a>
+            <a href="result/1.html" target="_blank" class="button bbut">More results</a>
           </div>
         </div>
       </div>
     </section>
-    <section class="hero is-dark" style="background-color: #525659;">
+    <section class="hero">
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
+        <div class=" col-max-width container">
+          <h1 class="title shead">
             Comparisons
           </h1>
           <div class="columns is-desktop">
@@ -239,13 +273,13 @@
                       <img src="compare/images/spaghetti/000_gt.jpg" alt="Shiny dataset">
                     </figure>
                   </div>
-                  <div class="card-content">
+                  <div class="card-content" style="padding: 24px 6px">
                     <div class="media">
                       <div class="media-left">
                       </div>
                       <div class="media-content">
-                        <p class="title is-4"> Shiny dataset</p>
-                        <p class="subtitle is-6">challenging view-dependent effects</p>
+                        <p class="title dtitle"> Shiny dataset</p>
+                        <p class="subtitle is-6">Our new challenging dataset</p>
                       </div>
                     </div>
                   </div>
@@ -260,12 +294,12 @@
                       <img src="compare/images/fern/016_gt.jpg" alt="Real forward-facing dataset">
                     </figure>
                   </div>
-                  <div class="card-content">
+                  <div class="card-content" style="padding: 24px 6px">
                     <div class="media">
                       <div class="media-left">
                       </div>
                       <div class="media-content">
-                        <p class="title is-4"> Real forward-facing dataset</p>
+                        <p class="title dtitle"> Real forward-facing dataset</p>
                         <p class="subtitle is-6">[Mildenhall et al. 2020]</p>
                       </div>
                     </div>
@@ -281,12 +315,12 @@
                       <img src="compare/images/scene_000/cam07_gt.jpg" alt="Spaces dataset">
                     </figure>
                   </div>
-                  <div class="card-content">
+                  <div class="card-content" style="padding: 24px 6px">
                     <div class="media">
                       <div class="media-left">
                       </div>
                       <div class="media-content">
-                        <p class="title is-4"> Spaces dataset</p>
+                        <p class="title dtitle"> Spaces dataset</p>
                         <p class="subtitle is-6">[Flynn et al. 2019]</p>
                       </div>
                     </div>
@@ -298,27 +332,11 @@
         </div>
       </div>
     </section>
-    <section class="hero">
-      <div class="hero-body">
-        <div class="container">
-          <div class="columns" style="text-align: center;">
-            <div class="column"></div>
-            <div class="column"></div>
-            <div class="column">
-              <a href="https://vistec.ist/vision" target="_blank"><img src="assets/images/vision.png" style="max-width: 200px;"></a>
-            </div>
-            <div class="column"></div>
-            <div class="column">
-                <a href="https://vistec.ist/" target="_blank" style="display: flex;height: 100%;justify-content:center;"><img src="assets/images/vistec_color.svg" style="max-width: 200px;"></a>
-            </div>
-            <div class="column"></div>
-            <div class="column"></div>
-          </div> 
-          <!--
-          <div class="columns" style="text-align: center;">
-            <div class="column"><a href="https://www.vistec.ac.th/admission/">Join us</a></div>         
-          </div>
-          -->         
+    <section class="hero" style="background-color: white;">
+      <div style="margin: 0px; margin-top: 5px;">
+        <div class="container" style="text-align: center; vertica">
+              <a href="https://vistec.ist/vision" target="_blank"><img src="assets/images/vision.png" style="width: 130px; display: inline; margin: 0 100px;"></a>
+              <a href="https://vistec.ist/" target="_blank"><img src="assets/images/vistec_color.svg" class="vistec-offset" style="width: 130px; display: inline; margin: 0 100px; position:relative; "></a>
         </div>        
       </div>
     </section>
