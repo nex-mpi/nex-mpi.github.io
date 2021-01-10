@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NeX: Real-time View Synthesis with Neural Basis Expansion</title>
+    <link rel="stylesheet" href="assets/scripts/bulma.min.css">
+    <link rel="icon" href="assets/images/icon_32x32.png" type="image/png" sizes="32x32">
+    <style>
+      .black-frame{
+        height: 100%;
+        background: #171617;
+        width: 100%;
+        display : flex;
+        align-items : center;
+        justify-content: center;
+      }
+      .card .media-content .title, .card .media-content .subtitle{
+        color: #4a4a4a;
+      }
+      .card-footer{
+        text-align: center;
+      }
+      .author{
+        font-size:1.2rem
+      }
+      @media only screen and (max-width: 600px) {
+        .author{
+          font-size:0.7rem
+        }
+        .equal-contribution{
+          font-size:0.65rem
+        }
+      }
+      
+    </style>
+
+  </head>
+  <body>
+    <section class="hero ">
+      <div class="hero-body">
+        <div class="container" style="text-align: center;">
+          <h1 class="title">
+            NeX: Real-time View Synthesis with Neural Basis Expansion
+          </h1>
+          <!-- <h2 class="subtitle"> [Conference name (soon)] </h2> -->
+          <div class="columns author is-mobile">
+            <div class="column">
+              Suttisak Wizadwongsa*
+            </div>
+            <div class="column">
+              Pakkapon Phongthawee*
+            </div>
+            <div class="column">
+              Jiraphon Yenphraphai*
+            </div>
+            <div class="column">
+              Supasorn Suwajanakorn 
+            </div>
+          </div>
+          <div>
+          </div>
+          <div class="author">
+            VISTEC - Vidyasirimedhi Institute of Science and Technology
+          </div>
+          <div class="equal-contribution"style="color:#909090">
+            *equal contribution
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" style="display : flex;align-items : center;justify-content: center;padding: 0px;">
+      <div style="max-width:  900px;width: 900px;">
+        <div style="position: relative;width: 100%;height: 0;padding-bottom: 56.25%;">
+          <iframe height="506.25" width="900" style=" position: absolute;top: 0;left: 0;width: 100%;height: 100%;max-height: 100%; max-width: 100%;" src="https://www.youtube.com/embed/d2UsFs4D-nw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container" style="max-width:900px;">
+          <h1 class="title">Abstract</h1>
+          <p class="is-size-5" style="text-align: justify;">
+                We present NeX, a new approach to novel view synthesis based on enhancements of multiplane image (MPI) 
+                that can reproduce NeXt-level view-dependent effects---in real-time. Unlike traditional MPI that uses a set of simple RGBα planes, 
+                our technique models view-dependent effects by instead parameterizing each pixel as a linear combination of basis functions learned from a neural network.
+                Moreover, we propose a hybrid implicit-explicit modeling strategy that improves upon fine detail and produces state-of-the-art results.
+                Our method is evaluated on benchmark forward-facing datasets as well as our newly-introduced dataset designed to test the limit of view-dependent modeling 
+                with significantly more challenging effects such as rainbow reflections on a CD.
+                Our method achieves the best overall scores across all major metrics on these datasets with more than 1000× faster rendering time than the state of the art.
+          </p>          
+        </div>
+      </div>
+    </section> 
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-size-5" style="text-align: center;">
+          <div class="columns">
+            <div class="column"></div>
+            <div class="column ">
+              <a href="assets/pdf/nex-paper.pdf" target="_blank">
+                <div>
+                  <img src="assets/images/paper.png">
+                </div>
+                Paper
+              </a>
+            </div>
+            <div class="column">
+              <div>
+                <img src="assets/images/coding.png">
+              </div>
+              Code [Soon]
+            </div>
+            <div class="column">
+              <div>
+                <img src="assets/images/our_dataset.png">
+              </div>
+              Data [Soon]
+            </div>
+            <div class="column"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="hero" >
+      <div class="hero-body">
+        <div class="container" style="max-width: 900px;">
+          <h1 class="title">
+            Real-time demos
+          </h1>
+          <p class="subtitle">
+            *A high-end GPU recommened for High and VR modes.
+          </p>
+          <div class="columns is-desktop">
+            <div class="column">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img src="viewer/images/gaint.jpg">
+                    </figure>
+                  </div>                  
+                  <footer class="card-footer">
+                    <a href="viewer/mobile.html?scene=https://pureexe.github.io/gaint/640" class="card-footer-item">Mobile </a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/800" class="card-footer-item">Low </a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/1008_192" class="card-footer-item">High </a>
+                    <a href="viewer/viewer.html?scene=https://pureexe.github.io/gaint/1008_096&vr" class="card-footer-item">VR </a>
+                  </footer>
+                </div>
+            </div>
+            <div class="column">
+              <div class="card">
+                <div class="card-image">
+                  <figure class="image is-4by3">
+                    <img src="compare/images/wat_phrakaew2-2/024_ours.jpg">
+                  </figure>
+                </div>              
+                <footer class="card-footer">
+                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/crest/640" class="card-footer-item">Mobile </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/800" class="card-footer-item">Low </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008_192" class="card-footer-item">High </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/1008_096&vr" class="card-footer-item">VR </a>
+                  <!-- <a href="viewer/viewer.html?scene=https://pureexe.github.io/crest/uncompressed/1008" class="card-footer-item">Uncompressed <br> (466 MB)</a> -->
+                </footer>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card">
+                <div class="card-image">
+                  <figure class="image is-4by3 " >
+                    <img src="viewer/images/cd.jpg">
+                  </figure>
+                </div>                
+                <footer class="card-footer" style="text-align: center;">
+                  <a href="viewer/mobile.html?scene=https://pureexe.github.io/cd/640" class="card-footer-item">Mobile</a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/800" class="card-footer-item">Low </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008_192" class="card-footer-item">High </a>
+                  <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/1008_096&vr" class="card-footer-item">VR</a>
+                  <!-- <a href="viewer/viewer.html?scene=https://pureexe.github.io/cd/uncompress/1008" class="card-footer-item">Uncompressed <br> (307 MB)</a> -->
+                </footer>
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center;width: 100%;">
+            <a href="viewer/" class="button is-danger">More demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="hero" >
+      <div class="hero-body">
+        <div class="container" style="max-width: 900px;">
+          <h1 class="title">
+            Additional results
+          </h1>
+          <div class="columns">
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/biome_jar.mp4" type="video/mp4" />
+              </video>  
+            </div>
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/saneh_jaan2.mp4" type="video/mp4" />
+                
+              </video>
+            </div>           
+          </div>
+          <div class="columns">
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/jarroom.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <div class="column">
+              <video controls autoplay loop>
+                <source src="assets/video/addition/cake1.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <div style="text-align: center;width: 100%;">
+            <a href="result/1.html" target="_blank" class="button is-danger">More results</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container" style="max-width: 900px;">
+          <h1 class="title">
+            Comparisons
+          </h1>
+          <div class="columns is-desktop">
+            <div class="column">
+              <a href="compare/shiny.html">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img src="compare/images/spaghetti/000_gt.jpg" alt="Shiny dataset">
+                    </figure>
+                  </div>
+                  <div class="card-content" style="padding: 24px 6px">
+                    <div class="media">
+                      <div class="media-left">
+                      </div>
+                      <div class="media-content">
+                        <p class="title is-6"> Shiny dataset</p>
+                        <p class="subtitle is-6">challenging view-dependent effects</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="column">
+              <a href="compare/frontface.html">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img src="compare/images/fern/016_gt.jpg" alt="Real forward-facing dataset">
+                    </figure>
+                  </div>
+                  <div class="card-content" style="padding: 24px 6px">
+                    <div class="media">
+                      <div class="media-left">
+                      </div>
+                      <div class="media-content">
+                        <p class="title is-6"> Real forward-facing dataset</p>
+                        <p class="subtitle is-6">[Mildenhall et al. 2020]</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="column">
+              <a href="compare/space.html">
+                <div class="card">
+                  <div class="card-image">
+                    <figure class="image is-4by3">
+                      <img src="compare/images/scene_000/cam07_gt.jpg" alt="Spaces dataset">
+                    </figure>
+                  </div>
+                  <div class="card-content" style="padding: 24px 6px">
+                    <div class="media">
+                      <div class="media-left">
+                      </div>
+                      <div class="media-content">
+                        <p class="title is-6"> Spaces dataset</p>
+                        <p class="subtitle is-6">[Flynn et al. 2019]</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container">
+          <div class="columns" style="text-align: center;">
+            <div class="column"></div>
+            <div class="column"></div>
+            <div class="column">
+              <a href="https://vistec.ist/vision" target="_blank"><img src="assets/images/vision.png" style="max-width: 200px;"></a>
+            </div>
+            <div class="column"></div>
+            <div class="column">
+                <a href="https://vistec.ist/" target="_blank" style="display: flex;height: 100%;justify-content:center;"><img src="assets/images/vistec_color.svg" style="max-width: 200px;"></a>
+            </div>
+            <div class="column"></div>
+            <div class="column"></div>
+          </div> 
+          <!--
+          <div class="columns" style="text-align: center;">
+            <div class="column"><a href="https://www.vistec.ac.th/admission/">Join us</a></div>         
+          </div>
+          -->         
+        </div>        
+      </div>
+    </section>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBLPBBKRZ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YBLPBBKRZ9');
+  	</script>
+  </body>
+</html>
