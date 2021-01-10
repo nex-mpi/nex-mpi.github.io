@@ -18,6 +18,9 @@
       .card .media-content .title, .card .media-content .subtitle{
         color: #4a4a4a;
       }
+      .subtitle {
+        margin-top: -0.8rem !important;
+      }
       .card-footer{
         text-align: center;
       }
@@ -32,14 +35,36 @@
           font-size:0.65rem
         }
       }
+      .shead {
+        font-size: 1.7rem;
+        margin-bottom: 0.5em !important;
+      }
+      .sec-body {
+      }
+      .hero-body {
+        padding: 1rem 0 2rem 0;
+      }
+      .bbut {
+        background-color: #739cde;
+        color: white;
+        padding: 0.5em 0.8em;
+        border-radius: 5px;
+      }
+      .dtitle {
+        font-size: 1.1rem;
+      }
+      .bbut:hover {
+        color: white !important;
+      }
+
       
     </style>
 
   </head>
-  <body>
-    <section class="hero ">
-      <div class="hero-body">
-        <div class="container" style="text-align: center;">
+  <body style="background-color: #F5F5F5;">
+    <section class="hero" style="background-color: white;">
+      <div class="hero-body" style="padding: 3rem 0 2rem 0;">
+        <div class="container" style="text-align: center; max-width: 950px;">
           <h1 class="title">
             NeX: Real-time View Synthesis with Neural Basis Expansion
           </h1>
@@ -60,7 +85,7 @@
           </div>
           <div>
           </div>
-          <div class="author">
+          <div class="author" style="font-size: 1.3rem">
             VISTEC - Vidyasirimedhi Institute of Science and Technology
           </div>
           <div class="equal-contribution"style="color:#909090">
@@ -69,7 +94,7 @@
         </div>
       </div>
     </section>
-    <section class="section" style="display : flex;align-items : center;justify-content: center;padding: 0px;">
+    <section class="section" style="display : flex; align-items : center;justify-content: center;padding: 10px;">
       <div style="max-width:  900px;width: 900px;">
         <div style="position: relative;width: 100%;height: 0;padding-bottom: 56.25%;">
           <iframe height="506.25" width="900" style=" position: absolute;top: 0;left: 0;width: 100%;height: 100%;max-height: 100%; max-width: 100%;" src="https://www.youtube.com/embed/d2UsFs4D-nw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -79,8 +104,8 @@
     <section class="hero">
       <div class="hero-body">
         <div class="container" style="max-width:900px;">
-          <h1 class="title">Abstract</h1>
-          <p class="is-size-5" style="text-align: justify;">
+          <h1 class="title shead">Abstract</h1>
+          <p class="abstract" style="text-align: justify;">
                 We present NeX, a new approach to novel view synthesis based on enhancements of multiplane image (MPI) 
                 that can reproduce NeXt-level view-dependent effects---in real-time. Unlike traditional MPI that uses a set of simple RGBα planes, 
                 our technique models view-dependent effects by instead parameterizing each pixel as a linear combination of basis functions learned from a neural network.
@@ -93,7 +118,7 @@
       </div>
     </section> 
     <section class="hero">
-      <div class="hero-body">
+      <div class="sec-body">
         <div class="container is-size-5" style="text-align: center;">
           <div class="columns">
             <div class="column"></div>
@@ -126,11 +151,11 @@
     <section class="hero" >
       <div class="hero-body">
         <div class="container" style="max-width: 900px;">
-          <h1 class="title">
+          <h1 class="title shead">
             Real-time demos
           </h1>
-          <p class="subtitle">
-            *A high-end GPU recommened for High and VR modes.
+          <p class="subtitle" style="font-size: 1rem;">
+            *A high-end GPU recommended for High and VR modes.
           </p>
           <div class="columns is-desktop">
             <div class="column">
@@ -182,7 +207,7 @@
             </div>
           </div>
           <div style="text-align: center;width: 100%;">
-            <a href="viewer/" class="button is-danger">More demo</a>
+            <a href="viewer/" class="bbut">More demos</a>
           </div>
         </div>
       </div>
@@ -190,7 +215,7 @@
     <section class="hero" >
       <div class="hero-body">
         <div class="container" style="max-width: 900px;">
-          <h1 class="title">
+          <h1 class="title shead">
             Additional results
           </h1>
           <div class="columns">
@@ -219,7 +244,7 @@
             </div>
           </div>
           <div style="text-align: center;width: 100%;">
-            <a href="result/1.html" target="_blank" class="button is-danger">More results</a>
+            <a href="result/1.html" target="_blank" class="button bbut">More results</a>
           </div>
         </div>
       </div>
@@ -227,7 +252,7 @@
     <section class="hero">
       <div class="hero-body">
         <div class="container" style="max-width: 900px;">
-          <h1 class="title">
+          <h1 class="title shead">
             Comparisons
           </h1>
           <div class="columns is-desktop">
@@ -244,8 +269,8 @@
                       <div class="media-left">
                       </div>
                       <div class="media-content">
-                        <p class="title is-6"> Shiny dataset</p>
-                        <p class="subtitle is-6">challenging view-dependent effects</p>
+                        <p class="title dtitle"> Shiny dataset</p>
+                        <p class="subtitle is-6">Our new challenging dataset</p>
                       </div>
                     </div>
                   </div>
@@ -265,7 +290,7 @@
                       <div class="media-left">
                       </div>
                       <div class="media-content">
-                        <p class="title is-6"> Real forward-facing dataset</p>
+                        <p class="title dtitle"> Real forward-facing dataset</p>
                         <p class="subtitle is-6">[Mildenhall et al. 2020]</p>
                       </div>
                     </div>
@@ -286,7 +311,7 @@
                       <div class="media-left">
                       </div>
                       <div class="media-content">
-                        <p class="title is-6"> Spaces dataset</p>
+                        <p class="title dtitle"> Spaces dataset</p>
                         <p class="subtitle is-6">[Flynn et al. 2019]</p>
                       </div>
                     </div>
@@ -298,27 +323,11 @@
         </div>
       </div>
     </section>
-    <section class="hero">
-      <div class="hero-body">
-        <div class="container">
-          <div class="columns" style="text-align: center;">
-            <div class="column"></div>
-            <div class="column"></div>
-            <div class="column">
-              <a href="https://vistec.ist/vision" target="_blank"><img src="assets/images/vision.png" style="max-width: 200px;"></a>
-            </div>
-            <div class="column"></div>
-            <div class="column">
-                <a href="https://vistec.ist/" target="_blank" style="display: flex;height: 100%;justify-content:center;"><img src="assets/images/vistec_color.svg" style="max-width: 200px;"></a>
-            </div>
-            <div class="column"></div>
-            <div class="column"></div>
-          </div> 
-          <!--
-          <div class="columns" style="text-align: center;">
-            <div class="column"><a href="https://www.vistec.ac.th/admission/">Join us</a></div>         
-          </div>
-          -->         
+    <section class="hero" style="background-color: white;">
+      <div style="margin: 0px; margin-top: 5px;">
+        <div class="container" style="text-align: center; vertica">
+              <a href="https://vistec.ist/vision" target="_blank"><img src="assets/images/vision.png" style="width: 130px; display: inline; margin: 0 100px;"></a>
+                <a href="https://vistec.ist/" target="_blank"><img src="assets/images/vistec_color.svg" style="width: 130px; display: inline; margin: 0 100px; position:relative; top:-15px; "></a>
         </div>        
       </div>
     </section>
