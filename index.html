@@ -58,11 +58,14 @@
       font-size:  1.5rem;
       padding: 12px;
     }
-
+    .slider-container{
+      padding-left: 30px;
+      padding-right: 30px;
+    }
     @media only screen and (min-width: 900px) {
       .container.col-max-width {
         max-width: 900px !important;
-      }
+      }      
     }
 
     @media only screen and (min-width: 681px) {
@@ -72,6 +75,10 @@
     }
 
     @media only screen and (max-width: 600px) {
+      .slider-container{
+        padding-left: 0px;
+        padding-right: 0px;
+      }
       .author {
         font-size: 0.7rem
       }
@@ -288,7 +295,7 @@
           *A high-end GPU recommended for High and VR modes.
         </p>
       </div>
-      <div class="container" style="max-width: 1050px; padding-left: 30px; padding-right: 30px">
+      <div class="container slider-container" style="max-width: 1050px;" >
         <div class="splide" style="padding-bottom: 30px;">
           <div class="splide__slider" style="padding: 0 50px;">
             <div class="splide__track">
