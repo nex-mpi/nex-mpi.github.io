@@ -118,6 +118,19 @@
     .videoren .column {
       margin: 0px;
     }
+    .button-clipboard-tooltip{
+        display: none;
+        color:white;
+        background: rgba(74,74,74,0.9);
+        border-radius: 2px;
+        padding: 0.5rem 1rem;
+        margin-right: 1rem;
+        text-overflow: ellipsis;
+        white-space: pre;
+    }
+    .button-clipboard, .button-clipboard:focus, .button-clipboard:active{
+      border-color: white;
+    }
   </style>
 
   <script src="assets/scripts/splide.min.js"></script>
@@ -541,6 +554,31 @@
       </div>
     </div>
   </section>
+  <section class="hero" style="padding-top:0px;">
+    <div class="hero-body">
+      <div class="container" style="max-width:900px;">
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">
+      BibTex
+    </p>
+    <button class="card-header-icon button-clipboard" style="border:0px; background: inherit;" data-clipboard-target="#bibtex-info" >
+      <div class="button-clipboard-tooltip">Copied!</div>
+      <span class="icon">
+        <img src="assets/images/copy.svg" style="height: 20px;"/>
+      </span>
+    </button>
+  </header>
+  <div class="card-content">
+    <pre style="background-color:inherit;padding: 0px;" id="bibtex-info">@inproceedings{Wizadwongsa2021NeX,
+      author = {Wizadwongsa, Suttisak and Phongthawee, Pakkapon and Yenphraphai, Jiraphon and Suwajanakorn, Supasorn},
+      title = {Real-time View Synthesis with Neural Basis Expansion},
+      booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, 
+      year = {2021},
+    }</pre>
+  </div>
+</div>
+  </section>
   <section class="hero" style="background-color: white;">
     <div style="margin: 0px; margin-top: 5px;">
       <div class="container" style="text-align: center; vertica">
@@ -568,6 +606,26 @@
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-YBLPBBKRZ9');
+  </script>
+  <script src="assets/scripts/clipboard.min.js"></script>
+  <script>
+    var clipboard = new ClipboardJS('.button-clipboard');
+    function setTooltip(){
+      var tooltip = document.querySelector('.button-clipboard-tooltip');
+      tooltip.style.display = 'block';
+    }
+    function hideTooltip(){
+      var tooltip = document.querySelector('.button-clipboard-tooltip');
+      tooltip.style.display = 'none';
+    }
+    clipboard.on('success', function(e) {
+      setTooltip(e.trigger, 'Copied!');
+      setTimeout(function(){
+        hideTooltip(e.trigger);
+      }, 2000);
+      
+    });
+    
   </script>
 </body>
 
