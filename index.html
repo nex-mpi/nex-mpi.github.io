@@ -128,9 +128,6 @@
         text-overflow: ellipsis;
         white-space: pre;
     }
-    .button-clipboard, .button-clipboard:focus, .button-clipboard:active{
-      border-color: white;
-    }
   </style>
 
   <script src="assets/scripts/splide.min.js"></script>
@@ -562,12 +559,12 @@
     <p class="card-header-title">
       BibTex
     </p>
-    <button class="card-header-icon button-clipboard" style="border:0px; background: inherit;" data-clipboard-target="#bibtex-info" >
+    <a class="card-header-icon button-clipboard" style="border:0px; background: inherit;" data-clipboard-target="#bibtex-info" >
       <div class="button-clipboard-tooltip">Copied!</div>
       <span class="icon">
         <img src="assets/images/copy.svg" style="height: 20px;"/>
       </span>
-    </button>
+    </a>
   </header>
   <div class="card-content">
     <pre style="background-color:inherit;padding: 0px;" id="bibtex-info">@inproceedings{Wizadwongsa2021NeX,
