@@ -104,6 +104,10 @@ $( document ).ready(function() {
       dX = (mx-old_x)*2*Math.PI/canvas.width,
       dY = (my-old_y)*2*Math.PI/canvas.height;
 
+      const DIVIDER = 8.0;
+      dX = dX / DIVIDER;
+      dY = dY / DIVIDER;
+
       old_x = mx, old_y = my;
 
       if (e.shiftKey) {
