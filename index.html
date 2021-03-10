@@ -597,14 +597,13 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBLPBBKRZ9"></script>
   <script>
     const fixWidthSize = screen.width > 600 ? '300px' : '240px';
-    const widthSize = screen.width > 1050 ? '1050px' : ''+(screen.width - 20)+'px';
     new Splide('.splide', {
       type: 'loop',
       perPage: 3,
       perMove: 1,
       focus: 'center',
       fixedWidth: fixWidthSize,
-      width: widthSize,
+      width: '1050px',
       arrows: 'slider',
     }).mount();
 
