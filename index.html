@@ -203,7 +203,7 @@
           state-of-the-art results.
           Our method is evaluated on benchmark forward-facing datasets as well as our newly-introduced dataset designed
           to test the limit of view-dependent modeling
-          with significantly more challenging effects such as rainbow reflections on a CD.
+          with significantly more challenging effects such as the rainbow reflections on a CD.
           Our method achieves the best overall scores across all major metrics on these datasets with more than 1000×
           faster rendering time than the state of the art.
         </p>
@@ -224,17 +224,27 @@
             </a>
           </div>
           <div class="column">
-            <div>
-              <img src="assets/images/coding.png">
-            </div>
-            Code [Soon]
+            <a href="https://github.com/nex-mpi/nex-code/" target="_blank">
+              <div>
+                <img src="assets/images/coding.png">
+              </div>          
+            Code
+            </a>
           </div>
+          <div class="column">
+            <a href="https://colab.research.google.com/drive/1hXVvYdAwLA0EFg2zrafJUE0bFgB_F7PU#scrollTo=TFbN4mrJCp8o&sandboxMode=true" target="_blank">
+              <div>
+                <img src="assets/images/colab_favicon_128x.png">
+              </div>
+            Colab notebook
+            </a>
+          </div>          
           <div class="column">
             <a href="https://vistec-my.sharepoint.com/:f:/g/personal/pakkapon_p_s19_vistec_ac_th/EnIUhsRVJOdNsZ_4smdhye0B8z0VlxqOR35IR3bp0uGupQ?e=TsaQgM" target="_blank">
               <div>
                 <img src="assets/images/our_dataset.png">
               </div>
-              Data
+              Shiny Dataset
             </a>
           </div>
           <div class="column"></div>
@@ -242,7 +252,7 @@
       </div>
     </div>
     <br />
-  </section>
+  </section>  
   <section class="hero">
     <div class="hero-body">
       <div class="col-max-width container videoren">
@@ -489,6 +499,80 @@
   </section>
   <section class="hero">
     <div class="hero-body">
+      <div class="container" style="max-width:900px;">
+        <h1 class="title shead">Rendering speed</h1> 
+        <p class="abstract" style="text-align: justify;">
+          This table shows the average FPS for the scenes in Shiny and Real Forward-Facing datasets. The rendering was done in real time using Google Chrome’s WebGL on a machine with an NVIDIA RTX3090. (Profiling done without <a target='_blank' href="https://en.wikipedia.org/wiki/Screen_tearing#Vertical_synchronization">Vertical Synchronization (Vsync)</a> to go beyond the monitor’s frame rate)
+        </p>        
+        <div class="card">
+          <div class="card-content">
+            <div class="content">
+              <div class="table-container">
+                <b>Shiny dataset</b>
+                <table class="table" style="text-align: center;">
+                  <thead>
+                    <tr>
+                      <td>CD</td>
+                      <td>Crest</td>
+                      <td>Food</td>
+                      <td>Gaint</td>
+                      <td>Lab</td>
+                      <td>Pasta</td>
+                      <td>Seasoning</td>
+                      <td>Tools</td>                      
+                    </tr>
+                   
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>431</td>
+                      <td>601</td>
+                      <td>389</td>
+                      <td>398</td>
+                      <td>394</td>
+                      <td>348</td>
+                      <td>338</td>
+                      <td>335</td>  
+                    </tr>                
+                  </tbody>
+                </table>
+                <b>Real forward-facing dataset</b>
+                <table class="table" style="text-align: center;">
+                  <thead>
+                    <tr>
+                      <td>Fern</td>
+                      <td>Flower</td>
+                      <td>Fortress</td>
+                      <td>Horns</td>
+                      <td>Leaves</td>
+                      <td>Orchids</td>
+                      <td>Room</td>
+                      <td>Trex</td>
+                    </tr>    
+                  </thead>
+                  <tbody>                   
+                    <tr>
+                      <td>393</td>
+                      <td>498</td>
+                      <td>289</td>
+                      <td>554</td>
+                      <td>628</td>
+                      <td>471</td>
+                      <td>435</td>
+                      <td>325</td>
+                    </tr>                   
+                  </tbody>
+                </table>
+                <b>Average:</b> 420 FPS
+              </div>
+            </div>
+          </div>
+        </div>        
+      </div>
+    </div>
+  </section>
+  <section class="hero">
+    <div class="hero-body">
       <div class=" col-max-width container">
         <h1 class="title shead">
           Comparisons
@@ -585,6 +669,36 @@
 }</pre>
   </div>
 </div>
+  </section>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container" style="max-width:900px;">
+        <div class=" col-max-width container">
+          <h1 class="title shead">
+            Project from our lab 
+          </h1>
+
+          <a href="http://repurposegans.github.io/" target="_blank">
+            <div class="card">
+                <header class="card-header">
+                  <p class="card-header-title">
+                    Repurposing GANs for One-shot Semantic Part Segmentation
+                  </p>
+                  <p class="card-header-icon" aria-label="more options">
+                    CVPR 2021 (Oral)
+                  </p>
+                </header>
+                <div class="card-content">
+                  <div class="content">
+                    <img src="assets/images/reproposed_gan.png" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+      </div>
+     </div>
+    </div>
   </section>
   <section class="hero" style="background-color: white;">
     <div style="margin: 0px; margin-top: 5px;">
